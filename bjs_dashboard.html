@@ -10,8 +10,8 @@
     --red: #FDB300; --motor-oil: #1A1A2E; --bouquet: #FFF8E1;
     --yolk: #F2D531; --detergent: #00B1FE; --navy: #173162;
     --det900: #005EA4; --purple: #722BD6; --coral: #FFB0AB; --pinot: #A9005D;
-    --bg: #0f1117; --card: #1a1d27; --card2: #22263a;
-    --border: #2e3450; --text: #f0f0f0; --muted: #8892b0;
+    --bg: #f0f2f5; --card: #ffffff; --card2: #f8f9fb;
+    --border: #e2e6ed; --text: #1a1d27; --muted: #6b7280;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
@@ -411,8 +411,8 @@ function monthLabel(m) {
   return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo-1] + " '" + y.slice(2);
 }
 
-Chart.defaults.color = '#8892b0';
-Chart.defaults.borderColor = '#2e3450';
+Chart.defaults.color = '#6b7280';
+Chart.defaults.borderColor = '#e2e6ed';
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 Chart.defaults.font.size = 11;
 
