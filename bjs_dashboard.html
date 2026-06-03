@@ -118,7 +118,7 @@
 <div class="page">
 
   <div class="section">
-    <h2 class="section-title">Latest Month Snapshot — May 2026</h2>
+    <h2 class="section-title" id="snapshot-title">Latest Month Snapshot — May 2026</h2>
     <div class="kpi-grid" id="kpi-grid"></div>
   </div>
 
@@ -399,22 +399,121 @@ const gridOpts = {
 const withComps = (d, field) => d.filter(r => r[field] !== null);
 
 // ─── KPI Cards (always latest month, static) ──────────────────────────────
-const latest = ALL_DATA[ALL_DATA.length - 1];
-const kpis = [
-  { label: 'MP Sales',       value: fmt.dollars(latest.sales),          sub: fmt.pct(latest.sales_vs_ly) + ' vs LY',          accent: '#FF3008' },
-  { label: 'Deliveries',     value: fmt.num(latest.deliveries),          sub: fmt.pct(latest.deliveries_vs_ly) + ' vs LY',     accent: '#00B1FE' },
-  { label: 'Customers',      value: fmt.num(latest.customers),           sub: fmt.pct(latest.customers_vs_ly) + ' vs LY',      accent: '#722BD6' },
-  { label: 'AOV',            value: '$' + latest.aov?.toFixed(2),        sub: fmt.pct(latest.aov_vs_ly) + ' vs LY',            accent: '#F2D531' },
-  { label: 'Avg Cust Spend', value: '$' + latest.avg_cust_spend?.toFixed(2), sub: fmt.pct(latest.avg_cust_spend_vs_ly) + ' vs LY', accent: '#A9005D' },
-  { label: 'Total IR',       value: latest.total_ir + '%',               sub: fmt.pp(latest.total_ir_vs_ly) + ' vs LY',        accent: '#570000' },
-  { label: 'Total Inv Spend',value: fmt.dollars(latest.total_inv_spend), sub: fmt.pct(latest.total_inv_vs_ly) + ' vs LY',      accent: '#FFB0AB' },
-];
-const grid = document.getElementById('kpi-grid');
-kpis.forEach(k => {
-  const val = parseFloat(k.sub);
-  const cls = k.sub.includes('N/A') ? 'na' : val > 0 ? 'pos' : val < 0 ? 'neg' : 'na';
-  grid.innerHTML += `<div class="kpi-card" style="--accent:${k.accent}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="sub ${cls}">${k.sub}</div></div>`;
-});
+// ─── Dynamic KPI Snapshot ─────────────────────────────────────────────────
+function fmtMonthFull(m) {
+  const [y, mo] = m.split('-');
+  const names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return names[+mo-1] + ' ' + y;
+}
+
+function getSnapshotData(rangeKey, filteredData) {
+  const latest = ALL_DATA[ALL_DATA.length - 1];
+
+  if (rangeKey === 'all') {
+    return {
+      title: `Latest Month Snapshot — ${fmtMonthFull(latest.month)}`,
+      isLatest: true,
+      sales:    { value: latest.sales,             yoy: latest.sales_vs_ly,          label: 'MP Sales',            accent: '#FDB300' },
+      delivs:   { value: latest.deliveries,         yoy: latest.deliveries_vs_ly,     label: 'Deliveries',          accent: '#00B1FE' },
+      cx:       { value: latest.customers,           yoy: latest.customers_vs_ly,      label: 'Customers',           accent: '#722BD6' },
+      aov:      { value: latest.aov,                 yoy: latest.aov_vs_ly,            label: 'AOV',                 accent: '#F2D531', isDollar: true },
+      acs:      { value: latest.avg_cust_spend,      yoy: latest.avg_cust_spend_vs_ly, label: 'Avg Cust Spend',      accent: '#A9005D', isDollar: true },
+      ir:       { value: latest.total_ir,            yoy: latest.total_ir_vs_ly,       label: 'Total IR',            accent: '#9e7500', isPp: true },
+      inv:      { value: latest.total_inv,            yoy: latest.total_inv_vs_ly,      label: 'Total Inv Spend',     accent: '#FFB0AB' },
+    };
+  }
+
+  // Period aggregate
+  const n = filteredData.length;
+  const totSales = filteredData.reduce((s, r) => s + r.sales, 0);
+  const totDel   = filteredData.reduce((s, r) => s + r.deliveries, 0);
+  const avgCx    = filteredData.reduce((s, r) => s + r.customers, 0) / n;
+  const totInv   = filteredData.reduce((s, r) => s + r.total_inv, 0);
+  const aov      = totSales / totDel;
+  const acs      = totSales / avgCx;
+  const ir       = (totInv / totSales) * 100;
+
+  // Prior year same months
+  const prior = filteredData.map(r => {
+    const [y, mo] = r.month.split('-');
+    return ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+  }).filter(Boolean);
+
+  let yoySales=null, yoyDel=null, yoyCx=null, yoyAov=null, yoyAcs=null, yoyIr=null, yoyInv=null;
+  if (prior.length >= Math.floor(n * 0.7)) {
+    const pSales = prior.reduce((s, r) => s + r.sales, 0);
+    const pDel   = prior.reduce((s, r) => s + r.deliveries, 0);
+    const pCx    = prior.reduce((s, r) => s + r.customers, 0) / prior.length;
+    const pInv   = prior.reduce((s, r) => s + r.total_inv, 0);
+    const pAov   = pSales / pDel;
+    const pAcs   = pSales / pCx;
+    const pIr    = (pInv / pSales) * 100;
+    yoySales = (totSales / pSales - 1) * 100;
+    yoyDel   = (totDel   / pDel   - 1) * 100;
+    yoyCx    = (avgCx    / pCx    - 1) * 100;
+    yoyAov   = (aov      / pAov   - 1) * 100;
+    yoyAcs   = (acs      / pAcs   - 1) * 100;
+    yoyIr    = ir - pIr;
+    yoyInv   = (totInv   / pInv   - 1) * 100;
+  }
+
+  const s0 = fmtMonthFull(filteredData[0].month);
+  const s1 = fmtMonthFull(filteredData[n-1].month);
+  const titles = {
+    comps:  `Period Snapshot — ${s0}–${s1}`,
+    '2026': `2026 YTD — ${s0}–${s1}`,
+    last12: `Last 12 Months — ${s0}–${s1}`,
+    last6:  `Last 6 Months — ${s0}–${s1}`,
+  };
+
+  return {
+    title: titles[rangeKey] || `Snapshot — ${s0}–${s1}`,
+    isLatest: false,
+    sales: { value: totSales, yoy: yoySales, label: 'Total Sales',      accent: '#FDB300' },
+    delivs:{ value: totDel,   yoy: yoyDel,   label: 'Total Deliveries', accent: '#00B1FE' },
+    cx:    { value: avgCx,    yoy: yoyCx,    label: 'Avg Monthly Cx',   accent: '#722BD6' },
+    aov:   { value: aov,      yoy: yoyAov,   label: 'Avg AOV',          accent: '#F2D531', isDollar: true },
+    acs:   { value: acs,      yoy: yoyAcs,   label: 'Avg Cust Spend',   accent: '#A9005D', isDollar: true },
+    ir:    { value: ir,       yoy: yoyIr,    label: 'Period Total IR',  accent: '#9e7500', isPp: true },
+    inv:   { value: totInv,   yoy: yoyInv,   label: 'Total Inv Spend',  accent: '#FFB0AB' },
+  };
+}
+
+function renderKpis(rangeKey, filteredData) {
+  const snap = getSnapshotData(rangeKey, filteredData);
+  document.getElementById('snapshot-title').textContent = snap.title;
+
+  const rows = [snap.sales, snap.delivs, snap.cx, snap.aov, snap.acs, snap.ir, snap.inv];
+  const grid = document.getElementById('kpi-grid');
+  grid.innerHTML = '';
+
+  rows.forEach(k => {
+    let valStr, subStr;
+    if (k.isDollar) {
+      valStr = '$' + (k.value != null ? k.value.toFixed(2) : '–');
+    } else if (k.isPp) {
+      valStr = (k.value != null ? k.value.toFixed(2) : '–') + '%';
+    } else if (k.value >= 1e6) {
+      valStr = '$' + (k.value / 1e6).toFixed(1) + 'M';
+    } else if (k.label.includes('Cx') || k.label.includes('Customers') || k.label.includes('Deliveries')) {
+      valStr = k.value != null ? k.value.toLocaleString('en-US', {maximumFractionDigits: 0}) : '–';
+    } else {
+      valStr = k.value != null ? '$' + (k.value / 1e6).toFixed(2) + 'M' : '–';
+    }
+
+    if (k.isPp) {
+      subStr = k.yoy != null ? (k.yoy > 0 ? '+' : '') + k.yoy.toFixed(2) + 'pp vs prior yr' : 'N/A';
+    } else {
+      subStr = k.yoy != null ? (k.yoy > 0 ? '+' : '') + k.yoy.toFixed(1) + '% vs prior yr' : 'N/A';
+    }
+
+    const cls = subStr === 'N/A' ? 'na' : parseFloat(subStr) > 0 ? 'pos' : parseFloat(subStr) < 0 ? 'neg' : 'na';
+    grid.innerHTML += `<div class="kpi-card" style="--accent:${k.accent}"><div class="label">${k.label}</div><div class="value">${valStr}</div><div class="sub ${cls}">${subStr}</div></div>`;
+  });
+}
+
+// Initial render
+renderKpis('all', ALL_DATA);
 
 // ─── Chart registry ───────────────────────────────────────────────────────
 const CHARTS = {};
@@ -664,6 +763,7 @@ function setRange(rangeKey) {
 
   // Rebuild all charts with new data slice
   initCharts(DATA);
+  renderKpis(rangeKey, DATA);
 }
 
 // ─── Investment overlay ───────────────────────────────────────────────────
