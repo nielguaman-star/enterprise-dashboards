@@ -187,6 +187,34 @@
     </div>
   </div>
 
+
+  <div class="section">
+    <h2 class="section-title">Customer Breakdown — Monthly Trend</h2>
+    <div class="chart-card">
+      <div class="chart-header"><div>
+        <div class="chart-title">New / Repeat / Lapsed Customers — Stacked</div>
+        <div class="chart-subtitle">Monthly composition · filtered by date range above</div>
+      </div></div>
+      <div class="chart-wrap tall"><canvas id="cxStackedChart"></canvas></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-header"><div>
+          <div class="chart-title">New &amp; Lapsed Customers</div>
+          <div class="chart-subtitle">Acquisition + win-back trend</div>
+        </div></div>
+        <div class="chart-wrap"><canvas id="cxNewLapsedChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div>
+          <div class="chart-title">Repeat Customers</div>
+          <div class="chart-subtitle">Loyal returning customer base</div>
+        </div></div>
+        <div class="chart-wrap"><canvas id="cxRepeatChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section">
     <h2 class="section-title">Investment Metrics</h2>
     <div class="chart-card">
@@ -687,6 +715,53 @@ function initCharts(d) {
       plugins:{ legend:{position:'bottom',labels:{boxWidth:10,padding:14}}, tooltip:{callbacks:{label:ctx=>ctx.raw===null?' N/A':' '+ctx.dataset.label+': '+(ctx.raw>0?'+':'')+ctx.raw.toFixed(1)+'%'}} },
       scales:{ x:{...gridOpts,ticks:{...gridOpts.ticks,maxRotation:45}}, y:{...gridOpts,ticks:{...gridOpts.ticks,callback:v=>v+'%'}} } }
   }); }
+
+
+  // Customer breakdown charts
+  if (CHARTS.cxStacked) CHARTS.cxStacked.destroy();
+  CHARTS.cxStacked = new Chart(document.getElementById('cxStackedChart'), {
+    type: 'bar',
+    data: { labels: d.map(r => monthLabel(r.month)), datasets: [
+      { label: 'New',    data: d.map(r => r.new_cx    || 0), backgroundColor: 'rgba(76,187,136,0.8)',  stack: 'cx', borderRadius: 2 },
+      { label: 'Lapsed', data: d.map(r => r.lapsed_cx || 0), backgroundColor: 'rgba(242,213,49,0.8)',  stack: 'cx', borderRadius: 2 },
+      { label: 'Repeat', data: d.map(r => r.repeat_cx || 0), backgroundColor: 'rgba(0,177,254,0.8)',   stack: 'cx', borderRadius: 2 },
+    ]},
+    options: { responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('en-US',{maximumFractionDigits:0})}`}}},
+      scales:{ x:{...gridOpts,stacked:true,ticks:{...gridOpts.ticks,maxRotation:45}},
+               y:{...gridOpts,stacked:true,ticks:{...gridOpts.ticks,callback:v=>(v/1e3).toFixed(0)+'K'}} } }
+  });
+
+  if (CHARTS.cxNewLapsed) CHARTS.cxNewLapsed.destroy();
+  CHARTS.cxNewLapsed = new Chart(document.getElementById('cxNewLapsedChart'), {
+    type:'line',
+    data:{ labels:d.map(r=>monthLabel(r.month)), datasets:[
+      {label:'New Cx',    data:d.map(r=>r.new_cx    ||0), borderColor:'#4cbb88', borderWidth:2, pointRadius:3, tension:0.3},
+      {label:'Lapsed Cx', data:d.map(r=>r.lapsed_cx ||0), borderColor:'#F2D531', borderWidth:2, pointRadius:3, tension:0.3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('en-US',{maximumFractionDigits:0})}`}}},
+      scales:{x:{...gridOpts,ticks:{...gridOpts.ticks,maxRotation:45}},
+              y:{...gridOpts,ticks:{...gridOpts.ticks,callback:v=>(v/1e3).toFixed(0)+'K'}}} }
+  });
+
+  if (CHARTS.cxRepeat) CHARTS.cxRepeat.destroy();
+  CHARTS.cxRepeat = new Chart(document.getElementById('cxRepeatChart'), {
+    type:'bar',
+    data:{ labels:d.map(r=>monthLabel(r.month)), datasets:[{
+      label:'Repeat Cx',
+      data:d.map(r=>r.repeat_cx||0),
+      backgroundColor:d.map(r=>r.month.startsWith('2026')?'rgba(0,177,254,0.9)':r.month.startsWith('2025')?'rgba(0,177,254,0.55)':'rgba(0,177,254,0.3)'),
+      borderRadius:3,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>` Repeat Cx: ${ctx.raw.toLocaleString('en-US',{maximumFractionDigits:0})}`}}},
+      scales:{x:{...gridOpts,ticks:{...gridOpts.ticks,maxRotation:45}},
+              y:{...gridOpts,ticks:{...gridOpts.ticks,callback:v=>(v/1e3).toFixed(0)+'K'}}} }
+  });
 
   // Inv spend stacked
   if (CHARTS.invSpend) CHARTS.invSpend.destroy();
