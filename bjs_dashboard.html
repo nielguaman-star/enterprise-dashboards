@@ -420,6 +420,21 @@ function getSnapshotData(rangeKey, filteredData) {
       acs:      { value: latest.avg_cust_spend,      yoy: latest.avg_cust_spend_vs_ly, label: 'Avg Cust Spend',      accent: '#A9005D', isDollar: true },
       ir:       { value: latest.total_ir,            yoy: latest.total_ir_vs_ly,       label: 'Total IR',            accent: '#9e7500', isPp: true },
       inv:      { value: latest.total_inv,            yoy: latest.total_inv_vs_ly,      label: 'Total Inv Spend',     accent: '#FFB0AB' },
+      newCx:    (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        return { value: latest.new_cx, yoy: (prior && prior.new_cx) ? (latest.new_cx/prior.new_cx-1)*100 : null, label: 'New Customers', accent: '#4cbb88' };
+      })(),
+      repeatCx: (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        return { value: latest.repeat_cx, yoy: (prior && prior.repeat_cx) ? (latest.repeat_cx/prior.repeat_cx-1)*100 : null, label: 'Repeat Customers', accent: '#00B1FE' };
+      })(),
+      lapsedCx: (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        return { value: latest.lapsed_cx, yoy: (prior && prior.lapsed_cx) ? (latest.lapsed_cx/prior.lapsed_cx-1)*100 : null, label: 'Lapsed (Returning)', accent: '#F2D531' };
+      })(),
     };
   }
 
@@ -428,7 +443,10 @@ function getSnapshotData(rangeKey, filteredData) {
   const totSales = filteredData.reduce((s, r) => s + r.sales, 0);
   const totDel   = filteredData.reduce((s, r) => s + r.deliveries, 0);
   const totCx    = filteredData.reduce((s, r) => s + r.customers, 0);
-  const totInv   = filteredData.reduce((s, r) => s + r.total_inv, 0);
+  const totInv      = filteredData.reduce((s, r) => s + r.total_inv, 0);
+  const totNewCx    = filteredData.reduce((s, r) => s + (r.new_cx    || 0), 0);
+  const totRepeatCx = filteredData.reduce((s, r) => s + (r.repeat_cx || 0), 0);
+  const totLapsedCx = filteredData.reduce((s, r) => s + (r.lapsed_cx || 0), 0);
   const aov      = totSales / totDel;
   const acs      = totSales / totCx;
   const ir       = (totInv / totSales) * 100;
@@ -440,6 +458,7 @@ function getSnapshotData(rangeKey, filteredData) {
   }).filter(Boolean);
 
   let yoySales=null, yoyDel=null, yoyCx=null, yoyAov=null, yoyAcs=null, yoyIr=null, yoyInv=null;
+  let yoyNewCx=null, yoyRepeatCx=null, yoyLapsedCx=null;
   if (prior.length >= Math.floor(n * 0.7)) {
     const pSales = prior.reduce((s, r) => s + r.sales, 0);
     const pDel   = prior.reduce((s, r) => s + r.deliveries, 0);
@@ -454,7 +473,13 @@ function getSnapshotData(rangeKey, filteredData) {
     yoyAov   = (aov      / pAov   - 1) * 100;
     yoyAcs   = (acs      / pAcs   - 1) * 100;
     yoyIr    = ir - pIr;
-    yoyInv   = (totInv   / pInv   - 1) * 100;
+    yoyInv      = (totInv      / pInv   - 1) * 100;
+    const pNewCx    = prior.reduce((s, r) => s + (r.new_cx    || 0), 0);
+    const pRepeatCx = prior.reduce((s, r) => s + (r.repeat_cx || 0), 0);
+    const pLapsedCx = prior.reduce((s, r) => s + (r.lapsed_cx || 0), 0);
+    yoyNewCx    = pNewCx    > 0 ? (totNewCx    / pNewCx    - 1) * 100 : null;
+    yoyRepeatCx = pRepeatCx > 0 ? (totRepeatCx / pRepeatCx - 1) * 100 : null;
+    yoyLapsedCx = pLapsedCx > 0 ? (totLapsedCx / pLapsedCx - 1) * 100 : null;
   }
 
   const s0 = fmtMonthFull(filteredData[0].month);
@@ -475,7 +500,10 @@ function getSnapshotData(rangeKey, filteredData) {
     aov:   { value: aov,      yoy: yoyAov,   label: 'Avg AOV',          accent: '#F2D531', isDollar: true },
     acs:   { value: acs,      yoy: yoyAcs,   label: 'Avg Cust Spend',   accent: '#A9005D', isDollar: true },
     ir:    { value: ir,       yoy: yoyIr,    label: 'Period Total IR',  accent: '#9e7500', isPp: true },
-    inv:   { value: totInv,   yoy: yoyInv,   label: 'Total Inv Spend',  accent: '#FFB0AB' },
+    inv:      { value: totInv,      yoy: yoyInv,      label: 'Total Inv Spend',    accent: '#FFB0AB' },
+    newCx:    { value: totNewCx,   yoy: yoyNewCx,   label: 'New Customers',      accent: '#4cbb88' },
+    repeatCx: { value: totRepeatCx,yoy: yoyRepeatCx, label: 'Repeat Customers',  accent: '#00B1FE' },
+    lapsedCx: { value: totLapsedCx,yoy: yoyLapsedCx, label: 'Lapsed (Returning)',accent: '#F2D531' },
   };
 }
 
@@ -483,7 +511,7 @@ function renderKpis(rangeKey, filteredData) {
   const snap = getSnapshotData(rangeKey, filteredData);
   document.getElementById('snapshot-title').textContent = snap.title;
 
-  const rows = [snap.sales, snap.delivs, snap.cx, snap.aov, snap.acs, snap.ir, snap.inv];
+  const rows = [snap.sales, snap.delivs, snap.cx, snap.newCx, snap.repeatCx, snap.lapsedCx, snap.aov, snap.acs, snap.ir, snap.inv];
   const grid = document.getElementById('kpi-grid');
   grid.innerHTML = '';
 
