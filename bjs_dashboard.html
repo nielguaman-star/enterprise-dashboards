@@ -427,10 +427,10 @@ function getSnapshotData(rangeKey, filteredData) {
   const n = filteredData.length;
   const totSales = filteredData.reduce((s, r) => s + r.sales, 0);
   const totDel   = filteredData.reduce((s, r) => s + r.deliveries, 0);
-  const avgCx    = filteredData.reduce((s, r) => s + r.customers, 0) / n;
+  const totCx    = filteredData.reduce((s, r) => s + r.customers, 0);
   const totInv   = filteredData.reduce((s, r) => s + r.total_inv, 0);
   const aov      = totSales / totDel;
-  const acs      = totSales / avgCx;
+  const acs      = totSales / totCx;
   const ir       = (totInv / totSales) * 100;
 
   // Prior year same months
@@ -443,14 +443,14 @@ function getSnapshotData(rangeKey, filteredData) {
   if (prior.length >= Math.floor(n * 0.7)) {
     const pSales = prior.reduce((s, r) => s + r.sales, 0);
     const pDel   = prior.reduce((s, r) => s + r.deliveries, 0);
-    const pCx    = prior.reduce((s, r) => s + r.customers, 0) / prior.length;
+    const pCx    = prior.reduce((s, r) => s + r.customers, 0);
     const pInv   = prior.reduce((s, r) => s + r.total_inv, 0);
     const pAov   = pSales / pDel;
     const pAcs   = pSales / pCx;
     const pIr    = (pInv / pSales) * 100;
     yoySales = (totSales / pSales - 1) * 100;
     yoyDel   = (totDel   / pDel   - 1) * 100;
-    yoyCx    = (avgCx    / pCx    - 1) * 100;
+    yoyCx    = (totCx    / pCx    - 1) * 100;
     yoyAov   = (aov      / pAov   - 1) * 100;
     yoyAcs   = (acs      / pAcs   - 1) * 100;
     yoyIr    = ir - pIr;
@@ -471,7 +471,7 @@ function getSnapshotData(rangeKey, filteredData) {
     isLatest: false,
     sales: { value: totSales, yoy: yoySales, label: 'Total Sales',      accent: '#FDB300' },
     delivs:{ value: totDel,   yoy: yoyDel,   label: 'Total Deliveries', accent: '#00B1FE' },
-    cx:    { value: avgCx,    yoy: yoyCx,    label: 'Avg Monthly Cx',   accent: '#722BD6' },
+    cx:    { value: totCx,    yoy: yoyCx,    label: 'Customers',   accent: '#722BD6' },
     aov:   { value: aov,      yoy: yoyAov,   label: 'Avg AOV',          accent: '#F2D531', isDollar: true },
     acs:   { value: acs,      yoy: yoyAcs,   label: 'Avg Cust Spend',   accent: '#A9005D', isDollar: true },
     ir:    { value: ir,       yoy: yoyIr,    label: 'Period Total IR',  accent: '#9e7500', isPp: true },
