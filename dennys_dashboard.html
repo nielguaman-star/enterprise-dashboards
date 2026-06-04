@@ -7,8 +7,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
-    --red: #E30513; --motor-oil: #1C1C1C; --bouquet: #FFF8E1;
-    --yolk: #FFD700; --detergent: #00B1FE; --navy: #173162;
+    --red: #E30513; --motor-oil: #1A1A2E; --bouquet: #FFF8E1;
+    --yolk: #F2D531; --detergent: #00B1FE; --navy: #173162;
     --det900: #005EA4; --purple: #722BD6; --coral: #FFB0AB; --pinot: #A9005D;
     --bg: #f0f2f5; --card: #ffffff; --card2: #f8f9fb;
     --border: #e2e6ed; --text: #1a1d27; --muted: #6b7280;
@@ -137,7 +137,7 @@
 <div class="page">
 
   <div class="section">
-    <h2 class="section-title">Latest Month Snapshot — May 2026</h2>
+    <h2 class="section-title" id="snapshot-title">Latest Month Snapshot — May 2026</h2>
     <div class="kpi-grid" id="kpi-grid"></div>
   </div>
 
@@ -202,6 +202,34 @@
           <div class="chart-subtitle">Basket size metrics year-over-year</div>
         </div></div>
         <div class="chart-wrap"><canvas id="aovGrowthChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <h2 class="section-title">Customer Breakdown — Monthly Trend</h2>
+    <div class="chart-card">
+      <div class="chart-header"><div>
+        <div class="chart-title">New / Repeat / Lapsed Customers — Stacked</div>
+        <div class="chart-subtitle">Monthly composition · filtered by date range above</div>
+      </div></div>
+      <div class="chart-wrap tall"><canvas id="cxStackedChart"></canvas></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-header"><div>
+          <div class="chart-title">New &amp; Lapsed Customers</div>
+          <div class="chart-subtitle">Acquisition + win-back trend</div>
+        </div></div>
+        <div class="chart-wrap"><canvas id="cxNewLapsedChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div>
+          <div class="chart-title">Repeat Customers</div>
+          <div class="chart-subtitle">Loyal returning customer base</div>
+        </div></div>
+        <div class="chart-wrap"><canvas id="cxRepeatChart"></canvas></div>
       </div>
     </div>
   </div>
@@ -337,6 +365,7 @@
     </div>
   </div>
 
+</div>
 </div><!-- /page --></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Overlay:</span>
@@ -352,146 +381,1211 @@
 <div id="tab-seasonality" style="display:none">
   <div class="page">
     <div class="season-banner">
-      2026 data runs Jan–May only (line ends at May). 2024 is the base year shown for pattern reference. New/Existing/Lapsed customer breakdown requires a separate data pull — showing total customers here.
+      2026 data runs Jan–May only (line ends at May). 2024 is the base year shown for pattern reference. New/Existing/Lapsed customer breakdown sourced from Monthly tab.
     </div>
 
     <div class="section">
       <h2 class="section-title">Sales Seasonality</h2>
-      <div class="chart-card">
-        <div class="chart-header"><div>
-          <div class="chart-title">Monthly MP Sales — 2024 vs 2025 vs 2026</div>
-          <div class="chart-subtitle">Solid = 2026 · Dashed = 2025 · Dotted = 2024</div>
-        </div></div>
-        <div class="chart-wrap tall"><canvas id="sSalesChart"></canvas></div>
-      </div>
+      <div class="chart-card"><div class="chart-header"><div>
+        <div class="chart-title">Monthly MP Sales — 2024 vs 2025 vs 2026</div>
+        <div class="chart-subtitle">Solid = 2026 · Dashed = 2025 · Dotted = 2024</div>
+      </div></div>
+      <div class="chart-wrap tall"><canvas id="sSalesChart"></canvas></div></div>
     </div>
 
     <div class="section">
       <h2 class="section-title">Order Volume &amp; Customers</h2>
       <div class="two-col">
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Monthly Deliveries</div>
-            <div class="chart-subtitle">Order volume by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sDelivsChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Total Customers</div>
-            <div class="chart-subtitle">All unique customers by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sCustsChart"></canvas></div>
-        </div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Monthly Deliveries</div>
+          <div class="chart-subtitle">Order volume year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sDelivsChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Total Customers</div>
+          <div class="chart-subtitle">Unique customers year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sCustsChart"></canvas></div></div>
       </div>
     </div>
 
     <div class="section">
       <h2 class="section-title">Customer Type Breakdown</h2>
       <div class="two-col">
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">New Customers</div>
-            <div class="chart-subtitle">First-time customers by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sNewCxChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Repeat Customers</div>
-            <div class="chart-subtitle">Existing/repeat customers by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sRepeatCxChart"></canvas></div>
-        </div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">New Customers</div>
+          <div class="chart-subtitle">First-time customers year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sNewCxChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Repeat Customers</div>
+          <div class="chart-subtitle">Existing regulars year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sRepeatCxChart"></canvas></div></div>
       </div>
-      <div class="chart-card" style="margin-top:20px">
-        <div class="chart-header"><div>
-          <div class="chart-title">Lapsed Customers (Returning)</div>
-          <div class="chart-subtitle">Customers returning after a gap — year-over-year seasonality</div>
-        </div></div>
-        <div class="chart-wrap tall"><canvas id="sLapsedCxChart"></canvas></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Lapsed (Returning)</div>
+          <div class="chart-subtitle">Customers returning after a gap</div>
+        </div></div><div class="chart-wrap"><canvas id="sLapsedCxChart"></canvas></div></div>
       </div>
     </div>
 
     <div class="section">
       <h2 class="section-title">Basket Size</h2>
       <div class="two-col">
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Average Order Value ($)</div>
-            <div class="chart-subtitle">AOV by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sAovChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Avg Customer Spend ($)</div>
-            <div class="chart-subtitle">Total spend per unique customer, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sAcsChart"></canvas></div>
-        </div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Average Order Value ($)</div>
+          <div class="chart-subtitle">AOV by month year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sAovChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Avg Customer Spend ($)</div>
+          <div class="chart-subtitle">Total spend per customer year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sAcsChart"></canvas></div></div>
       </div>
     </div>
 
     <div class="section">
       <h2 class="section-title">Investment Spend ($)</h2>
-      <div class="chart-card">
-        <div class="chart-header"><div>
-          <div class="chart-title">Total Investment Spend — Monthly Seasonality</div>
-          <div class="chart-subtitle">SL + Promo combined — spot peak spend months across years</div>
-        </div></div>
-        <div class="chart-wrap tall"><canvas id="sTotalInvChart"></canvas></div>
-      </div>
+      <div class="chart-card"><div class="chart-header"><div>
+        <div class="chart-title">Total Investment Spend — Monthly Seasonality</div>
+        <div class="chart-subtitle">SL + Promo combined year-over-year</div>
+      </div></div><div class="chart-wrap tall"><canvas id="sTotalInvChart"></canvas></div></div>
       <div class="two-col">
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">SL Spend ($)</div>
-            <div class="chart-subtitle">Sponsored Listings spend by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sSlChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Promo Spend ($)</div>
-            <div class="chart-subtitle">Promotional spend by month, year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sPromoChart"></canvas></div>
-        </div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">SL Spend ($)</div>
+          <div class="chart-subtitle">Sponsored Listings spend year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sSlChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Promo Spend ($)</div>
+          <div class="chart-subtitle">Promotional spend year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sPromoChart"></canvas></div></div>
       </div>
     </div>
 
     <div class="section">
       <h2 class="section-title">Investment Rate %</h2>
-      <div class="chart-card">
-        <div class="chart-header"><div>
-          <div class="chart-title">Total IR % — Monthly Seasonality</div>
-          <div class="chart-subtitle">Investment as % of sales — shows how reinvestment patterns shift year-to-year</div>
-        </div></div>
-        <div class="chart-wrap tall"><canvas id="sTotalIrChart"></canvas></div>
-      </div>
+      <div class="chart-card"><div class="chart-header"><div>
+        <div class="chart-title">Total IR % — Monthly Seasonality</div>
+        <div class="chart-subtitle">Investment as % of sales year-over-year</div>
+      </div></div><div class="chart-wrap tall"><canvas id="sTotalIrChart"></canvas></div></div>
       <div class="two-col">
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">SL IR % by Month</div>
-            <div class="chart-subtitle">Sponsored Listings rate year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sSlIrChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div>
-            <div class="chart-title">Promo IR % by Month</div>
-            <div class="chart-subtitle">Promo rate year-over-year</div>
-          </div></div>
-          <div class="chart-wrap"><canvas id="sPromoIrChart"></canvas></div>
-        </div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">SL IR % by Month</div>
+          <div class="chart-subtitle">Sponsored Listings rate year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sSlIrChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Promo IR % by Month</div>
+          <div class="chart-subtitle">Promo rate year-over-year</div>
+        </div></div><div class="chart-wrap"><canvas id="sPromoIrChart"></canvas></div></div>
       </div>
     </div>
   </div>
 </div><!-- /tab-seasonality -->
 
+
+
 <script>
-const ALL_DATA = [{"month":"2024-01","sales":12252494.0,"deliveries":447558,"customers":440740,"aov":27.4,"avg_cust_spend":27.8,"orders_per_cust":1.0155,"sl_spend":38294.0,"promo_spend":183961.0,"total_inv":222255.0,"sl_ir":0.3125,"promo_ir":1.5014,"total_ir":1.814,"new_cx":114243,"repeat_cx":231438,"lapsed_cx":58985,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":404666,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-02","sales":12257927.0,"deliveries":440734,"customers":433896,"aov":27.8,"avg_cust_spend":28.3,"orders_per_cust":1.0158,"sl_spend":15321.0,"promo_spend":189992.0,"total_inv":205313.0,"sl_ir":0.125,"promo_ir":1.55,"total_ir":1.6749,"new_cx":109461,"repeat_cx":231235,"lapsed_cx":58427,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":399123,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-03","sales":14379517.0,"deliveries":515135,"customers":506873,"aov":27.9,"avg_cust_spend":28.4,"orders_per_cust":1.0163,"sl_spend":144426.0,"promo_spend":187899.0,"total_inv":332326.0,"sl_ir":1.0044,"promo_ir":1.3067,"total_ir":2.3111,"new_cx":132713,"repeat_cx":263217,"lapsed_cx":68209,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":464139,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-04","sales":12051636.0,"deliveries":437538,"customers":430922,"aov":27.5,"avg_cust_spend":28.0,"orders_per_cust":1.0154,"sl_spend":73934.0,"promo_spend":118937.0,"total_inv":192871.0,"sl_ir":0.6135,"promo_ir":0.9869,"total_ir":1.6004,"new_cx":106787,"repeat_cx":230376,"lapsed_cx":55703,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":392866,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-05","sales":12672356.0,"deliveries":451551,"customers":444559,"aov":28.1,"avg_cust_spend":28.5,"orders_per_cust":1.0157,"sl_spend":150184.0,"promo_spend":146380.0,"total_inv":296563.0,"sl_ir":1.1851,"promo_ir":1.1551,"total_ir":2.3402,"new_cx":110737,"repeat_cx":237650,"lapsed_cx":59349,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":407736,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-06","sales":12458641.0,"deliveries":440491,"customers":433990,"aov":28.3,"avg_cust_spend":28.7,"orders_per_cust":1.015,"sl_spend":112557.0,"promo_spend":321878.0,"total_inv":434435.0,"sl_ir":0.9034,"promo_ir":2.5836,"total_ir":3.487,"new_cx":111004,"repeat_cx":232283,"lapsed_cx":59660,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":402947,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-07","sales":12000432.0,"deliveries":431370,"customers":424833,"aov":27.8,"avg_cust_spend":28.3,"orders_per_cust":1.0154,"sl_spend":160044.0,"promo_spend":174744.0,"total_inv":334788.0,"sl_ir":1.3337,"promo_ir":1.4561,"total_ir":2.7898,"new_cx":110306,"repeat_cx":225781,"lapsed_cx":58484,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":394571,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-08","sales":12028200.0,"deliveries":435048,"customers":428555,"aov":27.7,"avg_cust_spend":28.1,"orders_per_cust":1.0152,"sl_spend":160313.0,"promo_spend":145265.0,"total_inv":305578.0,"sl_ir":1.3328,"promo_ir":1.2077,"total_ir":2.5405,"new_cx":105792,"repeat_cx":230282,"lapsed_cx":59595,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":395669,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-09","sales":12201260.0,"deliveries":442055,"customers":435653,"aov":27.6,"avg_cust_spend":28.0,"orders_per_cust":1.0147,"sl_spend":152757.0,"promo_spend":145590.0,"total_inv":298347.0,"sl_ir":1.252,"promo_ir":1.1932,"total_ir":2.4452,"new_cx":108368,"repeat_cx":234965,"lapsed_cx":64110,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":407443,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-10","sales":12136688.0,"deliveries":441166,"customers":434709,"aov":27.5,"avg_cust_spend":27.9,"orders_per_cust":1.0149,"sl_spend":152289.0,"promo_spend":178792.0,"total_inv":331082.0,"sl_ir":1.2548,"promo_ir":1.4732,"total_ir":2.7279,"new_cx":107839,"repeat_cx":234156,"lapsed_cx":63322,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":405317,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-11","sales":14259048.0,"deliveries":497092,"customers":489423,"aov":28.7,"avg_cust_spend":29.1,"orders_per_cust":1.0157,"sl_spend":165568.0,"promo_spend":256809.0,"total_inv":422377.0,"sl_ir":1.1611,"promo_ir":1.801,"total_ir":2.9622,"new_cx":126873,"repeat_cx":261476,"lapsed_cx":75220,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":463569,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2024-12","sales":14804305.0,"deliveries":509355,"customers":501441,"aov":29.1,"avg_cust_spend":29.5,"orders_per_cust":1.0158,"sl_spend":159796.0,"promo_spend":272580.0,"total_inv":432376.0,"sl_ir":1.0794,"promo_ir":1.8412,"total_ir":2.9206,"new_cx":132405,"repeat_cx":268145,"lapsed_cx":77568,"sales_vs_ly":null,"customers_vs_ly":null,"deliveries_vs_ly":null,"aov_vs_ly":null,"avg_cust_spend_vs_ly":null,"sl_spend_vs_ly":null,"promo_spend_vs_ly":null,"total_inv_vs_ly":null,"sl_ir_vs_ly":null,"promo_ir_vs_ly":null,"total_ir_vs_ly":null,"total_cx":478118,"new_cx_vly":null,"repeat_cx_vly":null,"lapsed_cx_vly":null,"total_cx_vly":null,"repeat_cx_vly_pct":null,"lapsed_cx_vly_pct":null,"total_cx_vly_pct":null},{"month":"2025-01","sales":13175656.0,"deliveries":460079,"customers":453208,"aov":28.6,"avg_cust_spend":29.1,"orders_per_cust":1.0152,"sl_spend":105139.0,"promo_spend":356357.0,"total_inv":461496.0,"sl_ir":0.798,"promo_ir":2.7047,"total_ir":3.5026,"new_cx":114507,"repeat_cx":244400,"lapsed_cx":65767,"sales_vs_ly":7.5,"customers_vs_ly":2.8,"deliveries_vs_ly":2.8,"aov_vs_ly":4.4,"avg_cust_spend_vs_ly":4.7,"sl_spend_vs_ly":174.6,"promo_spend_vs_ly":93.7,"total_inv_vs_ly":107.6,"sl_ir_vs_ly":0.4855,"promo_ir_vs_ly":1.2033,"total_ir_vs_ly":1.6886,"total_cx":424674,"new_cx_vly":264,"repeat_cx_vly":12962,"lapsed_cx_vly":6782,"total_cx_vly":20008,"repeat_cx_vly_pct":0.2,"lapsed_cx_vly_pct":5.6,"total_cx_vly_pct":11.5},{"month":"2025-02","sales":12796086.0,"deliveries":442701,"customers":435297,"aov":28.9,"avg_cust_spend":29.4,"orders_per_cust":1.017,"sl_spend":113845.0,"promo_spend":325429.0,"total_inv":439273.0,"sl_ir":0.8897,"promo_ir":2.5432,"total_ir":3.4329,"new_cx":108587,"repeat_cx":239710,"lapsed_cx":63864,"sales_vs_ly":4.4,"customers_vs_ly":0.3,"deliveries_vs_ly":0.4,"aov_vs_ly":4.0,"avg_cust_spend_vs_ly":3.9,"sl_spend_vs_ly":643.1,"promo_spend_vs_ly":71.3,"total_inv_vs_ly":114.0,"sl_ir_vs_ly":0.7647,"promo_ir_vs_ly":0.9932,"total_ir_vs_ly":1.758,"total_cx":412161,"new_cx_vly":-874,"repeat_cx_vly":8475,"lapsed_cx_vly":5437,"total_cx_vly":13038,"repeat_cx_vly_pct":-0.8,"lapsed_cx_vly_pct":3.7,"total_cx_vly_pct":9.3},{"month":"2025-03","sales":15254137.0,"deliveries":525019,"customers":516736,"aov":29.1,"avg_cust_spend":29.5,"orders_per_cust":1.016,"sl_spend":98399.0,"promo_spend":431666.0,"total_inv":530065.0,"sl_ir":0.6451,"promo_ir":2.8298,"total_ir":3.4749,"new_cx":129895,"repeat_cx":275165,"lapsed_cx":74376,"sales_vs_ly":6.1,"customers_vs_ly":1.9,"deliveries_vs_ly":1.9,"aov_vs_ly":4.3,"avg_cust_spend_vs_ly":3.9,"sl_spend_vs_ly":-31.9,"promo_spend_vs_ly":129.7,"total_inv_vs_ly":59.5,"sl_ir_vs_ly":-0.3593,"promo_ir_vs_ly":1.5231,"total_ir_vs_ly":1.1638,"total_cx":479436,"new_cx_vly":-2818,"repeat_cx_vly":11948,"lapsed_cx_vly":6167,"total_cx_vly":15297,"repeat_cx_vly_pct":-2.1,"lapsed_cx_vly_pct":4.5,"total_cx_vly_pct":9.0},{"month":"2025-04","sales":13013061.0,"deliveries":458576,"customers":451562,"aov":28.4,"avg_cust_spend":28.8,"orders_per_cust":1.0155,"sl_spend":90113.0,"promo_spend":292740.0,"total_inv":382853.0,"sl_ir":0.6925,"promo_ir":2.2496,"total_ir":2.9421,"new_cx":109600,"repeat_cx":245213,"lapsed_cx":61611,"sales_vs_ly":8.0,"customers_vs_ly":4.8,"deliveries_vs_ly":4.8,"aov_vs_ly":3.3,"avg_cust_spend_vs_ly":2.9,"sl_spend_vs_ly":21.9,"promo_spend_vs_ly":146.1,"total_inv_vs_ly":98.5,"sl_ir_vs_ly":0.079,"promo_ir_vs_ly":1.2627,"total_ir_vs_ly":1.3417,"total_cx":416424,"new_cx_vly":2813,"repeat_cx_vly":14837,"lapsed_cx_vly":5908,"total_cx_vly":23558,"repeat_cx_vly_pct":2.6,"lapsed_cx_vly_pct":6.4,"total_cx_vly_pct":10.6},{"month":"2025-05","sales":12962256.0,"deliveries":448814,"customers":442064,"aov":28.9,"avg_cust_spend":29.3,"orders_per_cust":1.0153,"sl_spend":96951.0,"promo_spend":244076.0,"total_inv":341026.0,"sl_ir":0.7479,"promo_ir":1.883,"total_ir":2.6309,"new_cx":107802,"repeat_cx":241369,"lapsed_cx":62855,"sales_vs_ly":2.3,"customers_vs_ly":-0.6,"deliveries_vs_ly":-0.6,"aov_vs_ly":2.8,"avg_cust_spend_vs_ly":2.8,"sl_spend_vs_ly":-35.4,"promo_spend_vs_ly":66.7,"total_inv_vs_ly":15.0,"sl_ir_vs_ly":-0.4372,"promo_ir_vs_ly":0.7279,"total_ir_vs_ly":0.2907,"total_cx":412026,"new_cx_vly":-2935,"repeat_cx_vly":3719,"lapsed_cx_vly":3506,"total_cx_vly":4290,"repeat_cx_vly_pct":-2.7,"lapsed_cx_vly_pct":1.6,"total_cx_vly_pct":5.9},{"month":"2025-06","sales":12536164.0,"deliveries":433586,"customers":427227,"aov":28.9,"avg_cust_spend":29.3,"orders_per_cust":1.0149,"sl_spend":223527.0,"promo_spend":207378.0,"total_inv":430905.0,"sl_ir":1.7831,"promo_ir":1.6542,"total_ir":3.4373,"new_cx":108621,"repeat_cx":231544,"lapsed_cx":60949,"sales_vs_ly":0.6,"customers_vs_ly":-1.6,"deliveries_vs_ly":-1.6,"aov_vs_ly":2.1,"avg_cust_spend_vs_ly":2.1,"sl_spend_vs_ly":98.6,"promo_spend_vs_ly":-35.6,"total_inv_vs_ly":-0.8,"sl_ir_vs_ly":0.8797,"promo_ir_vs_ly":-0.9294,"total_ir_vs_ly":-0.0497,"total_cx":401114,"new_cx_vly":-2383,"repeat_cx_vly":-739,"lapsed_cx_vly":1289,"total_cx_vly":-1833,"repeat_cx_vly_pct":-2.1,"lapsed_cx_vly_pct":-0.3,"total_cx_vly_pct":2.2},{"month":"2025-07","sales":12622460.0,"deliveries":436559,"customers":429921,"aov":28.9,"avg_cust_spend":29.4,"orders_per_cust":1.0154,"sl_spend":165861.0,"promo_spend":343130.0,"total_inv":508992.0,"sl_ir":1.314,"promo_ir":2.7184,"total_ir":4.0324,"new_cx":106851,"repeat_cx":233892,"lapsed_cx":64261,"sales_vs_ly":5.2,"customers_vs_ly":1.2,"deliveries_vs_ly":1.2,"aov_vs_ly":4.0,"avg_cust_spend_vs_ly":3.9,"sl_spend_vs_ly":3.6,"promo_spend_vs_ly":96.4,"total_inv_vs_ly":52.0,"sl_ir_vs_ly":-0.0197,"promo_ir_vs_ly":1.2623,"total_ir_vs_ly":1.2426,"total_cx":405004,"new_cx_vly":-3455,"repeat_cx_vly":8111,"lapsed_cx_vly":5777,"total_cx_vly":10433,"repeat_cx_vly_pct":-3.1,"lapsed_cx_vly_pct":3.6,"total_cx_vly_pct":9.9},{"month":"2025-08","sales":12889894.0,"deliveries":444916,"customers":438735,"aov":29.0,"avg_cust_spend":29.4,"orders_per_cust":1.0141,"sl_spend":189553.0,"promo_spend":322798.0,"total_inv":512351.0,"sl_ir":1.4706,"promo_ir":2.5043,"total_ir":3.9748,"new_cx":112708,"repeat_cx":236593,"lapsed_cx":68960,"sales_vs_ly":7.2,"customers_vs_ly":2.4,"deliveries_vs_ly":2.3,"aov_vs_ly":4.7,"avg_cust_spend_vs_ly":4.6,"sl_spend_vs_ly":18.2,"promo_spend_vs_ly":122.2,"total_inv_vs_ly":67.7,"sl_ir_vs_ly":0.1378,"promo_ir_vs_ly":1.2966,"total_ir_vs_ly":1.4343,"total_cx":418261,"new_cx_vly":6916,"repeat_cx_vly":6311,"lapsed_cx_vly":9365,"total_cx_vly":22592,"repeat_cx_vly_pct":6.5,"lapsed_cx_vly_pct":2.7,"total_cx_vly_pct":15.7},{"month":"2025-09","sales":12034281.0,"deliveries":419327,"customers":413483,"aov":28.7,"avg_cust_spend":29.1,"orders_per_cust":1.0141,"sl_spend":177777.0,"promo_spend":303032.0,"total_inv":480809.0,"sl_ir":1.4773,"promo_ir":2.5181,"total_ir":3.9953,"new_cx":103176,"repeat_cx":226198,"lapsed_cx":65971,"sales_vs_ly":-1.4,"customers_vs_ly":-5.1,"deliveries_vs_ly":-5.1,"aov_vs_ly":4.0,"avg_cust_spend_vs_ly":3.9,"sl_spend_vs_ly":16.4,"promo_spend_vs_ly":108.1,"total_inv_vs_ly":61.2,"sl_ir_vs_ly":0.2253,"promo_ir_vs_ly":1.3249,"total_ir_vs_ly":1.5501,"total_cx":395345,"new_cx_vly":-5192,"repeat_cx_vly":-8767,"lapsed_cx_vly":1861,"total_cx_vly":-12098,"repeat_cx_vly_pct":-4.8,"lapsed_cx_vly_pct":-3.7,"total_cx_vly_pct":2.9},{"month":"2025-10","sales":12658978.0,"deliveries":443021,"customers":436708,"aov":28.6,"avg_cust_spend":29.0,"orders_per_cust":1.0145,"sl_spend":182574.0,"promo_spend":251589.0,"total_inv":434163.0,"sl_ir":1.4422,"promo_ir":1.9874,"total_ir":3.4297,"new_cx":106203,"repeat_cx":238943,"lapsed_cx":71697,"sales_vs_ly":4.3,"customers_vs_ly":0.5,"deliveries_vs_ly":0.4,"aov_vs_ly":4.0,"avg_cust_spend_vs_ly":3.9,"sl_spend_vs_ly":19.9,"promo_spend_vs_ly":40.7,"total_inv_vs_ly":31.1,"sl_ir_vs_ly":0.1874,"promo_ir_vs_ly":0.5142,"total_ir_vs_ly":0.7018,"total_cx":416843,"new_cx_vly":-1636,"repeat_cx_vly":4787,"lapsed_cx_vly":8375,"total_cx_vly":11526,"repeat_cx_vly_pct":-1.5,"lapsed_cx_vly_pct":2.0,"total_cx_vly_pct":13.2},{"month":"2025-11","sales":13578279.0,"deliveries":455529,"customers":448845,"aov":29.8,"avg_cust_spend":30.3,"orders_per_cust":1.0149,"sl_spend":209933.0,"promo_spend":313688.0,"total_inv":523621.0,"sl_ir":1.5461,"promo_ir":2.3102,"total_ir":3.8563,"new_cx":112491,"repeat_cx":247420,"lapsed_cx":76161,"sales_vs_ly":-4.8,"customers_vs_ly":-8.3,"deliveries_vs_ly":-8.4,"aov_vs_ly":3.8,"avg_cust_spend_vs_ly":4.1,"sl_spend_vs_ly":26.8,"promo_spend_vs_ly":22.1,"total_inv_vs_ly":24.0,"sl_ir_vs_ly":0.385,"promo_ir_vs_ly":0.5092,"total_ir_vs_ly":0.8941,"total_cx":436072,"new_cx_vly":-14382,"repeat_cx_vly":-14056,"lapsed_cx_vly":941,"total_cx_vly":-27497,"repeat_cx_vly_pct":-11.3,"lapsed_cx_vly_pct":-5.4,"total_cx_vly_pct":1.3},{"month":"2025-12","sales":14419371.0,"deliveries":476217,"customers":469100,"aov":30.3,"avg_cust_spend":30.7,"orders_per_cust":1.0152,"sl_spend":272589.0,"promo_spend":466988.0,"total_inv":739578.0,"sl_ir":1.8904,"promo_ir":3.2386,"total_ir":5.1291,"new_cx":120556,"repeat_cx":259377,"lapsed_cx":84778,"sales_vs_ly":-2.6,"customers_vs_ly":-6.4,"deliveries_vs_ly":-6.5,"aov_vs_ly":4.1,"avg_cust_spend_vs_ly":4.1,"sl_spend_vs_ly":70.6,"promo_spend_vs_ly":71.3,"total_inv_vs_ly":71.0,"sl_ir_vs_ly":0.811,"promo_ir_vs_ly":1.3974,"total_ir_vs_ly":2.2085,"total_cx":464711,"new_cx_vly":-11849,"repeat_cx_vly":-8768,"lapsed_cx_vly":7210,"total_cx_vly":-13407,"repeat_cx_vly_pct":-8.9,"lapsed_cx_vly_pct":-3.3,"total_cx_vly_pct":9.3},{"month":"2026-01","sales":13138747.0,"deliveries":442004,"customers":435587,"aov":29.7,"avg_cust_spend":30.2,"orders_per_cust":1.0147,"sl_spend":226128.0,"promo_spend":425013.0,"total_inv":651142.0,"sl_ir":1.7211,"promo_ir":3.2348,"total_ir":4.9559,"new_cx":103901,"repeat_cx":243201,"lapsed_cx":72967,"sales_vs_ly":-0.3,"customers_vs_ly":-3.9,"deliveries_vs_ly":-3.9,"aov_vs_ly":3.8,"avg_cust_spend_vs_ly":3.8,"sl_spend_vs_ly":115.1,"promo_spend_vs_ly":19.3,"total_inv_vs_ly":41.1,"sl_ir_vs_ly":0.9231,"promo_ir_vs_ly":0.5301,"total_ir_vs_ly":1.4533,"total_cx":420069,"new_cx_vly":-10606,"repeat_cx_vly":-1199,"lapsed_cx_vly":7200,"total_cx_vly":-4605,"repeat_cx_vly_pct":-9.3,"lapsed_cx_vly_pct":-0.5,"total_cx_vly_pct":10.9},{"month":"2026-02","sales":12726289.0,"deliveries":422781,"customers":416686,"aov":30.1,"avg_cust_spend":30.5,"orders_per_cust":1.0146,"sl_spend":205552.0,"promo_spend":411780.0,"total_inv":617332.0,"sl_ir":1.6152,"promo_ir":3.2357,"total_ir":4.8508,"new_cx":95861,"repeat_cx":237823,"lapsed_cx":71106,"sales_vs_ly":-0.5,"customers_vs_ly":-4.3,"deliveries_vs_ly":-4.5,"aov_vs_ly":4.2,"avg_cust_spend_vs_ly":3.7,"sl_spend_vs_ly":80.6,"promo_spend_vs_ly":26.5,"total_inv_vs_ly":40.5,"sl_ir_vs_ly":0.7255,"promo_ir_vs_ly":0.6925,"total_ir_vs_ly":1.4179,"total_cx":404790,"new_cx_vly":-12726,"repeat_cx_vly":-1887,"lapsed_cx_vly":7242,"total_cx_vly":-7371,"repeat_cx_vly_pct":-11.7,"lapsed_cx_vly_pct":-0.8,"total_cx_vly_pct":11.3},{"month":"2026-03","sales":16339844.0,"deliveries":541618,"customers":533493,"aov":30.2,"avg_cust_spend":30.6,"orders_per_cust":1.0152,"sl_spend":573819.0,"promo_spend":822722.0,"total_inv":1396541.0,"sl_ir":3.5118,"promo_ir":5.0351,"total_ir":8.5468,"new_cx":128644,"repeat_cx":292071,"lapsed_cx":91162,"sales_vs_ly":7.1,"customers_vs_ly":3.2,"deliveries_vs_ly":3.2,"aov_vs_ly":3.8,"avg_cust_spend_vs_ly":3.7,"sl_spend_vs_ly":483.2,"promo_spend_vs_ly":90.6,"total_inv_vs_ly":163.5,"sl_ir_vs_ly":2.8667,"promo_ir_vs_ly":2.2053,"total_ir_vs_ly":5.0719,"total_cx":511877,"new_cx_vly":-1251,"repeat_cx_vly":16906,"lapsed_cx_vly":16786,"total_cx_vly":32441,"repeat_cx_vly_pct":-1.0,"lapsed_cx_vly_pct":6.1,"total_cx_vly_pct":22.6},{"month":"2026-04","sales":14369360.0,"deliveries":478312,"customers":471537,"aov":30.0,"avg_cust_spend":30.5,"orders_per_cust":1.0144,"sl_spend":487105.0,"promo_spend":654739.0,"total_inv":1141843.0,"sl_ir":3.3899,"promo_ir":4.5565,"total_ir":7.9464,"new_cx":107660,"repeat_cx":263844,"lapsed_cx":76875,"sales_vs_ly":10.4,"customers_vs_ly":4.4,"deliveries_vs_ly":4.3,"aov_vs_ly":5.6,"avg_cust_spend_vs_ly":5.9,"sl_spend_vs_ly":440.5,"promo_spend_vs_ly":123.7,"total_inv_vs_ly":198.2,"sl_ir_vs_ly":2.6974,"promo_ir_vs_ly":2.3069,"total_ir_vs_ly":5.0043,"total_cx":448379,"new_cx_vly":-1940,"repeat_cx_vly":18631,"lapsed_cx_vly":15264,"total_cx_vly":31955,"repeat_cx_vly_pct":-1.8,"lapsed_cx_vly_pct":7.6,"total_cx_vly_pct":24.8},
-{"month":"2026-05","sales":14530618.85,"deliveries":482393,"customers":438491,"aov":30.1,"avg_cust_spend":33.1,"orders_per_cust":1.100,"sl_spend":443685.0,"promo_spend":518859.17,"total_inv":962544.17,"sl_ir":3.053,"promo_ir":3.571,"total_ir":6.624,"new_cx":104275,"repeat_cx":255458,"lapsed_cx":72514,"sales_vs_ly":12.10,"customers_vs_ly":-0.81,"deliveries_vs_ly":7.48,"aov_vs_ly":4.15,"avg_cust_spend_vs_ly":13.0,"sl_spend_vs_ly":357.6,"promo_spend_vs_ly":112.6,"total_inv_vs_ly":182.2,"sl_ir_vs_ly":2.305,"promo_ir_vs_ly":1.688,"total_ir_vs_ly":3.993,"total_cx":448011,"new_cx_vly":855,"repeat_cx_vly":22404,"lapsed_cx_vly":12726,"total_cx_vly":35985,"repeat_cx_vly_pct":0.8,"lapsed_cx_vly_pct":9.3,"total_cx_vly_pct":20.2}];
+const ALL_DATA = [
+  {
+    "month": "2024-01",
+    "sales": 12252494,
+    "deliveries": 447558,
+    "customers": 440740,
+    "aov": 27.4,
+    "avg_cust_spend": 27.8,
+    "orders_per_cust": 1.0155,
+    "sl_spend": 38294,
+    "promo_spend": 183961,
+    "total_inv": 222255,
+    "total_ir": 1.81,
+    "sl_ir": 0.31,
+    "promo_ir": 1.5,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 114243,
+    "repeat_cx": 231438,
+    "lapsed_cx": 58985,
+    "total_cx": 404666,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-02",
+    "sales": 12257927,
+    "deliveries": 440734,
+    "customers": 433896,
+    "aov": 27.8,
+    "avg_cust_spend": 28.3,
+    "orders_per_cust": 1.0158,
+    "sl_spend": 15321,
+    "promo_spend": 189992,
+    "total_inv": 205313,
+    "total_ir": 1.67,
+    "sl_ir": 0.12,
+    "promo_ir": 1.55,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 109461,
+    "repeat_cx": 231235,
+    "lapsed_cx": 58427,
+    "total_cx": 399123,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-03",
+    "sales": 14379517,
+    "deliveries": 515135,
+    "customers": 506873,
+    "aov": 27.9,
+    "avg_cust_spend": 28.4,
+    "orders_per_cust": 1.0163,
+    "sl_spend": 144426,
+    "promo_spend": 187899,
+    "total_inv": 332326,
+    "total_ir": 2.31,
+    "sl_ir": 1.0,
+    "promo_ir": 1.31,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 132713,
+    "repeat_cx": 263217,
+    "lapsed_cx": 68209,
+    "total_cx": 464139,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-04",
+    "sales": 12051636,
+    "deliveries": 437538,
+    "customers": 430922,
+    "aov": 27.5,
+    "avg_cust_spend": 28,
+    "orders_per_cust": 1.0154,
+    "sl_spend": 73934,
+    "promo_spend": 118937,
+    "total_inv": 192871,
+    "total_ir": 1.6,
+    "sl_ir": 0.61,
+    "promo_ir": 0.99,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 106787,
+    "repeat_cx": 230376,
+    "lapsed_cx": 55703,
+    "total_cx": 392866,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-05",
+    "sales": 12672356,
+    "deliveries": 451551,
+    "customers": 444559,
+    "aov": 28.1,
+    "avg_cust_spend": 28.5,
+    "orders_per_cust": 1.0157,
+    "sl_spend": 150184,
+    "promo_spend": 146380,
+    "total_inv": 296563,
+    "total_ir": 2.34,
+    "sl_ir": 1.19,
+    "promo_ir": 1.16,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 110737,
+    "repeat_cx": 237650,
+    "lapsed_cx": 59349,
+    "total_cx": 407736,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-06",
+    "sales": 12458641,
+    "deliveries": 440491,
+    "customers": 433990,
+    "aov": 28.3,
+    "avg_cust_spend": 28.7,
+    "orders_per_cust": 1.015,
+    "sl_spend": 112557,
+    "promo_spend": 321878,
+    "total_inv": 434435,
+    "total_ir": 3.49,
+    "sl_ir": 0.9,
+    "promo_ir": 2.58,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 111004,
+    "repeat_cx": 232283,
+    "lapsed_cx": 59660,
+    "total_cx": 402947,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-07",
+    "sales": 12000432,
+    "deliveries": 431370,
+    "customers": 424833,
+    "aov": 27.8,
+    "avg_cust_spend": 28.3,
+    "orders_per_cust": 1.0154,
+    "sl_spend": 160044,
+    "promo_spend": 174744,
+    "total_inv": 334788,
+    "total_ir": 2.79,
+    "sl_ir": 1.33,
+    "promo_ir": 1.46,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 110306,
+    "repeat_cx": 225781,
+    "lapsed_cx": 58484,
+    "total_cx": 394571,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-08",
+    "sales": 12028200,
+    "deliveries": 435048,
+    "customers": 428555,
+    "aov": 27.7,
+    "avg_cust_spend": 28.1,
+    "orders_per_cust": 1.0152,
+    "sl_spend": 160313,
+    "promo_spend": 145265,
+    "total_inv": 305578,
+    "total_ir": 2.54,
+    "sl_ir": 1.33,
+    "promo_ir": 1.21,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 105792,
+    "repeat_cx": 230282,
+    "lapsed_cx": 59595,
+    "total_cx": 395669,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-09",
+    "sales": 12201260,
+    "deliveries": 442055,
+    "customers": 435653,
+    "aov": 27.6,
+    "avg_cust_spend": 28,
+    "orders_per_cust": 1.0147,
+    "sl_spend": 152757,
+    "promo_spend": 145590,
+    "total_inv": 298347,
+    "total_ir": 2.45,
+    "sl_ir": 1.25,
+    "promo_ir": 1.19,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 108368,
+    "repeat_cx": 234965,
+    "lapsed_cx": 64110,
+    "total_cx": 407443,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-10",
+    "sales": 12136688,
+    "deliveries": 441166,
+    "customers": 434709,
+    "aov": 27.5,
+    "avg_cust_spend": 27.9,
+    "orders_per_cust": 1.0149,
+    "sl_spend": 152289,
+    "promo_spend": 178792,
+    "total_inv": 331082,
+    "total_ir": 2.73,
+    "sl_ir": 1.25,
+    "promo_ir": 1.47,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 107839,
+    "repeat_cx": 234156,
+    "lapsed_cx": 63322,
+    "total_cx": 405317,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-11",
+    "sales": 14259048,
+    "deliveries": 497092,
+    "customers": 489423,
+    "aov": 28.7,
+    "avg_cust_spend": 29.1,
+    "orders_per_cust": 1.0157,
+    "sl_spend": 165568,
+    "promo_spend": 256809,
+    "total_inv": 422377,
+    "total_ir": 2.96,
+    "sl_ir": 1.16,
+    "promo_ir": 1.8,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 126873,
+    "repeat_cx": 261476,
+    "lapsed_cx": 75220,
+    "total_cx": 463569,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2024-12",
+    "sales": 14804305,
+    "deliveries": 509355,
+    "customers": 501441,
+    "aov": 29.1,
+    "avg_cust_spend": 29.5,
+    "orders_per_cust": 1.0158,
+    "sl_spend": 159796,
+    "promo_spend": 272580,
+    "total_inv": 432376,
+    "total_ir": 2.92,
+    "sl_ir": 1.08,
+    "promo_ir": 1.84,
+    "sales_vs_ly": null,
+    "deliveries_vs_ly": null,
+    "customers_vs_ly": null,
+    "aov_vs_ly": null,
+    "avg_cust_spend_vs_ly": null,
+    "orders_per_cust_vs_ly": null,
+    "sl_spend_vs_ly": null,
+    "promo_spend_vs_ly": null,
+    "total_inv_vs_ly": null,
+    "sl_ir_vs_ly": null,
+    "promo_ir_vs_ly": null,
+    "total_ir_vs_ly": null,
+    "new_cx": 132405,
+    "repeat_cx": 268145,
+    "lapsed_cx": 77568,
+    "total_cx": 478118,
+    "new_cx_vly": null,
+    "repeat_cx_vly": null,
+    "lapsed_cx_vly": null,
+    "total_cx_vly": null,
+    "repeat_cx_vly_pct": null,
+    "lapsed_cx_vly_pct": null,
+    "total_cx_vly_pct": null
+  },
+  {
+    "month": "2025-01",
+    "sales": 13175656,
+    "deliveries": 460079,
+    "customers": 453208,
+    "aov": 28.6,
+    "avg_cust_spend": 29.1,
+    "orders_per_cust": 1.0152,
+    "sl_spend": 105139,
+    "promo_spend": 356357,
+    "total_inv": 461496,
+    "total_ir": 3.5,
+    "sl_ir": 0.8,
+    "promo_ir": 2.7,
+    "sales_vs_ly": 7.5,
+    "deliveries_vs_ly": 2.8,
+    "customers_vs_ly": 2.8,
+    "aov_vs_ly": 4.6,
+    "avg_cust_spend_vs_ly": 4.6,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": 174.6,
+    "promo_spend_vs_ly": 93.7,
+    "total_inv_vs_ly": 107.6,
+    "sl_ir_vs_ly": 1.69,
+    "promo_ir_vs_ly": 0.49,
+    "total_ir_vs_ly": 1.2,
+    "new_cx": 114507,
+    "repeat_cx": 244400,
+    "lapsed_cx": 65767,
+    "total_cx": 424674,
+    "new_cx_vly": 264.0,
+    "repeat_cx_vly": 12962.0,
+    "lapsed_cx_vly": 6782.0,
+    "total_cx_vly": 20008.0,
+    "repeat_cx_vly_pct": 0.2,
+    "lapsed_cx_vly_pct": 5.6,
+    "total_cx_vly_pct": 11.5
+  },
+  {
+    "month": "2025-02",
+    "sales": 12796086,
+    "deliveries": 442701,
+    "customers": 435297,
+    "aov": 28.9,
+    "avg_cust_spend": 29.4,
+    "orders_per_cust": 1.017,
+    "sl_spend": 113845,
+    "promo_spend": 325429,
+    "total_inv": 439273,
+    "total_ir": 3.43,
+    "sl_ir": 0.89,
+    "promo_ir": 2.54,
+    "sales_vs_ly": 4.4,
+    "deliveries_vs_ly": 0.4,
+    "customers_vs_ly": 0.3,
+    "aov_vs_ly": 3.9,
+    "avg_cust_spend_vs_ly": 4.1,
+    "orders_per_cust_vs_ly": 0.1,
+    "sl_spend_vs_ly": 643.1,
+    "promo_spend_vs_ly": 71.3,
+    "total_inv_vs_ly": 114.0,
+    "sl_ir_vs_ly": 1.76,
+    "promo_ir_vs_ly": 0.77,
+    "total_ir_vs_ly": 0.99,
+    "new_cx": 108587,
+    "repeat_cx": 239710,
+    "lapsed_cx": 63864,
+    "total_cx": 412161,
+    "new_cx_vly": -874.0,
+    "repeat_cx_vly": 8475.0,
+    "lapsed_cx_vly": 5437.0,
+    "total_cx_vly": 13038.0,
+    "repeat_cx_vly_pct": -0.8,
+    "lapsed_cx_vly_pct": 3.7,
+    "total_cx_vly_pct": 9.3
+  },
+  {
+    "month": "2025-03",
+    "sales": 15254137,
+    "deliveries": 525019,
+    "customers": 516736,
+    "aov": 29.1,
+    "avg_cust_spend": 29.5,
+    "orders_per_cust": 1.016,
+    "sl_spend": 98399,
+    "promo_spend": 431666,
+    "total_inv": 530065,
+    "total_ir": 3.47,
+    "sl_ir": 0.65,
+    "promo_ir": 2.83,
+    "sales_vs_ly": 6.1,
+    "deliveries_vs_ly": 1.9,
+    "customers_vs_ly": 1.9,
+    "aov_vs_ly": 4.1,
+    "avg_cust_spend_vs_ly": 4.1,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": -31.9,
+    "promo_spend_vs_ly": 129.7,
+    "total_inv_vs_ly": 59.5,
+    "sl_ir_vs_ly": 1.16,
+    "promo_ir_vs_ly": -0.35,
+    "total_ir_vs_ly": 1.52,
+    "new_cx": 129895,
+    "repeat_cx": 275165,
+    "lapsed_cx": 74376,
+    "total_cx": 479436,
+    "new_cx_vly": -2818.0,
+    "repeat_cx_vly": 11948.0,
+    "lapsed_cx_vly": 6167.0,
+    "total_cx_vly": 15297.0,
+    "repeat_cx_vly_pct": -2.1,
+    "lapsed_cx_vly_pct": 4.5,
+    "total_cx_vly_pct": 9.0
+  },
+  {
+    "month": "2025-04",
+    "sales": 13013061,
+    "deliveries": 458576,
+    "customers": 451562,
+    "aov": 28.4,
+    "avg_cust_spend": 28.8,
+    "orders_per_cust": 1.0155,
+    "sl_spend": 90113,
+    "promo_spend": 292740,
+    "total_inv": 382853,
+    "total_ir": 2.94,
+    "sl_ir": 0.69,
+    "promo_ir": 2.25,
+    "sales_vs_ly": 8.0,
+    "deliveries_vs_ly": 4.8,
+    "customers_vs_ly": 4.8,
+    "aov_vs_ly": 3.0,
+    "avg_cust_spend_vs_ly": 3.0,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": 21.9,
+    "promo_spend_vs_ly": 146.1,
+    "total_inv_vs_ly": 98.5,
+    "sl_ir_vs_ly": 1.34,
+    "promo_ir_vs_ly": 0.08,
+    "total_ir_vs_ly": 1.26,
+    "new_cx": 109600,
+    "repeat_cx": 245213,
+    "lapsed_cx": 61611,
+    "total_cx": 416424,
+    "new_cx_vly": 2813.0,
+    "repeat_cx_vly": 14837.0,
+    "lapsed_cx_vly": 5908.0,
+    "total_cx_vly": 23558.0,
+    "repeat_cx_vly_pct": 2.6,
+    "lapsed_cx_vly_pct": 6.4,
+    "total_cx_vly_pct": 10.6
+  },
+  {
+    "month": "2025-05",
+    "sales": 12962256,
+    "deliveries": 448814,
+    "customers": 442064,
+    "aov": 28.9,
+    "avg_cust_spend": 29.3,
+    "orders_per_cust": 1.0153,
+    "sl_spend": 96951,
+    "promo_spend": 244076,
+    "total_inv": 341026,
+    "total_ir": 2.63,
+    "sl_ir": 0.75,
+    "promo_ir": 1.88,
+    "sales_vs_ly": 2.3,
+    "deliveries_vs_ly": -0.6,
+    "customers_vs_ly": -0.6,
+    "aov_vs_ly": 2.9,
+    "avg_cust_spend_vs_ly": 2.9,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": -35.4,
+    "promo_spend_vs_ly": 66.7,
+    "total_inv_vs_ly": 15.0,
+    "sl_ir_vs_ly": 0.29,
+    "promo_ir_vs_ly": -0.44,
+    "total_ir_vs_ly": 0.72,
+    "new_cx": 107802,
+    "repeat_cx": 241369,
+    "lapsed_cx": 62855,
+    "total_cx": 412026,
+    "new_cx_vly": -2935.0,
+    "repeat_cx_vly": 3719.0,
+    "lapsed_cx_vly": 3506.0,
+    "total_cx_vly": 4290.0,
+    "repeat_cx_vly_pct": -2.7,
+    "lapsed_cx_vly_pct": 1.6,
+    "total_cx_vly_pct": 5.9
+  },
+  {
+    "month": "2025-06",
+    "sales": 12536164,
+    "deliveries": 433586,
+    "customers": 427227,
+    "aov": 28.9,
+    "avg_cust_spend": 29.3,
+    "orders_per_cust": 1.0149,
+    "sl_spend": 223527,
+    "promo_spend": 207378,
+    "total_inv": 430905,
+    "total_ir": 3.44,
+    "sl_ir": 1.78,
+    "promo_ir": 1.65,
+    "sales_vs_ly": 0.6,
+    "deliveries_vs_ly": -1.6,
+    "customers_vs_ly": -1.6,
+    "aov_vs_ly": 2.2,
+    "avg_cust_spend_vs_ly": 2.2,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": 98.6,
+    "promo_spend_vs_ly": -35.6,
+    "total_inv_vs_ly": -0.8,
+    "sl_ir_vs_ly": -0.05,
+    "promo_ir_vs_ly": 0.88,
+    "total_ir_vs_ly": -0.93,
+    "new_cx": 108621,
+    "repeat_cx": 231544,
+    "lapsed_cx": 60949,
+    "total_cx": 401114,
+    "new_cx_vly": -2383.0,
+    "repeat_cx_vly": -739.0,
+    "lapsed_cx_vly": 1289.0,
+    "total_cx_vly": -1833.0,
+    "repeat_cx_vly_pct": -2.1,
+    "lapsed_cx_vly_pct": -0.3,
+    "total_cx_vly_pct": 2.2
+  },
+  {
+    "month": "2025-07",
+    "sales": 12622460,
+    "deliveries": 436559,
+    "customers": 429921,
+    "aov": 28.9,
+    "avg_cust_spend": 29.4,
+    "orders_per_cust": 1.0154,
+    "sl_spend": 165861,
+    "promo_spend": 343130,
+    "total_inv": 508992,
+    "total_ir": 4.03,
+    "sl_ir": 1.31,
+    "promo_ir": 2.72,
+    "sales_vs_ly": 5.2,
+    "deliveries_vs_ly": 1.2,
+    "customers_vs_ly": 1.2,
+    "aov_vs_ly": 3.9,
+    "avg_cust_spend_vs_ly": 3.9,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": 3.6,
+    "promo_spend_vs_ly": 96.4,
+    "total_inv_vs_ly": 52.0,
+    "sl_ir_vs_ly": 1.24,
+    "promo_ir_vs_ly": -0.02,
+    "total_ir_vs_ly": 1.26,
+    "new_cx": 106851,
+    "repeat_cx": 233892,
+    "lapsed_cx": 64261,
+    "total_cx": 405004,
+    "new_cx_vly": -3455.0,
+    "repeat_cx_vly": 8111.0,
+    "lapsed_cx_vly": 5777.0,
+    "total_cx_vly": 10433.0,
+    "repeat_cx_vly_pct": -3.1,
+    "lapsed_cx_vly_pct": 3.6,
+    "total_cx_vly_pct": 9.9
+  },
+  {
+    "month": "2025-08",
+    "sales": 12889894,
+    "deliveries": 444916,
+    "customers": 438735,
+    "aov": 29,
+    "avg_cust_spend": 29.4,
+    "orders_per_cust": 1.0141,
+    "sl_spend": 189553,
+    "promo_spend": 322798,
+    "total_inv": 512351,
+    "total_ir": 3.97,
+    "sl_ir": 1.47,
+    "promo_ir": 2.5,
+    "sales_vs_ly": 7.2,
+    "deliveries_vs_ly": 2.3,
+    "customers_vs_ly": 2.4,
+    "aov_vs_ly": 4.8,
+    "avg_cust_spend_vs_ly": 4.7,
+    "orders_per_cust_vs_ly": -0.1,
+    "sl_spend_vs_ly": 18.2,
+    "promo_spend_vs_ly": 122.2,
+    "total_inv_vs_ly": 67.7,
+    "sl_ir_vs_ly": 1.43,
+    "promo_ir_vs_ly": 0.14,
+    "total_ir_vs_ly": 1.29,
+    "new_cx": 112708,
+    "repeat_cx": 236593,
+    "lapsed_cx": 68960,
+    "total_cx": 418261,
+    "new_cx_vly": 6916.0,
+    "repeat_cx_vly": 6311.0,
+    "lapsed_cx_vly": 9365.0,
+    "total_cx_vly": 22592.0,
+    "repeat_cx_vly_pct": 6.5,
+    "lapsed_cx_vly_pct": 2.7,
+    "total_cx_vly_pct": 15.7
+  },
+  {
+    "month": "2025-09",
+    "sales": 12034281,
+    "deliveries": 419327,
+    "customers": 413483,
+    "aov": 28.7,
+    "avg_cust_spend": 29.1,
+    "orders_per_cust": 1.0141,
+    "sl_spend": 177777,
+    "promo_spend": 303032,
+    "total_inv": 480809,
+    "total_ir": 4.0,
+    "sl_ir": 1.48,
+    "promo_ir": 2.52,
+    "sales_vs_ly": -1.4,
+    "deliveries_vs_ly": -5.1,
+    "customers_vs_ly": -5.1,
+    "aov_vs_ly": 4.0,
+    "avg_cust_spend_vs_ly": 3.9,
+    "orders_per_cust_vs_ly": -0.1,
+    "sl_spend_vs_ly": 16.4,
+    "promo_spend_vs_ly": 108.1,
+    "total_inv_vs_ly": 61.2,
+    "sl_ir_vs_ly": 1.55,
+    "promo_ir_vs_ly": 0.23,
+    "total_ir_vs_ly": 1.33,
+    "new_cx": 103176,
+    "repeat_cx": 226198,
+    "lapsed_cx": 65971,
+    "total_cx": 395345,
+    "new_cx_vly": -5192.0,
+    "repeat_cx_vly": -8767.0,
+    "lapsed_cx_vly": 1861.0,
+    "total_cx_vly": -12098.0,
+    "repeat_cx_vly_pct": -4.8,
+    "lapsed_cx_vly_pct": -3.7,
+    "total_cx_vly_pct": 2.9
+  },
+  {
+    "month": "2025-10",
+    "sales": 12658978,
+    "deliveries": 443021,
+    "customers": 436708,
+    "aov": 28.6,
+    "avg_cust_spend": 29,
+    "orders_per_cust": 1.0145,
+    "sl_spend": 182574,
+    "promo_spend": 251589,
+    "total_inv": 434163,
+    "total_ir": 3.43,
+    "sl_ir": 1.44,
+    "promo_ir": 1.99,
+    "sales_vs_ly": 4.3,
+    "deliveries_vs_ly": 0.4,
+    "customers_vs_ly": 0.5,
+    "aov_vs_ly": 3.9,
+    "avg_cust_spend_vs_ly": 3.8,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": 19.9,
+    "promo_spend_vs_ly": 40.7,
+    "total_inv_vs_ly": 31.1,
+    "sl_ir_vs_ly": 0.7,
+    "promo_ir_vs_ly": 0.19,
+    "total_ir_vs_ly": 0.52,
+    "new_cx": 106203,
+    "repeat_cx": 238943,
+    "lapsed_cx": 71697,
+    "total_cx": 416843,
+    "new_cx_vly": -1636.0,
+    "repeat_cx_vly": 4787.0,
+    "lapsed_cx_vly": 8375.0,
+    "total_cx_vly": 11526.0,
+    "repeat_cx_vly_pct": -1.5,
+    "lapsed_cx_vly_pct": 2.0,
+    "total_cx_vly_pct": 13.2
+  },
+  {
+    "month": "2025-11",
+    "sales": 13578279,
+    "deliveries": 455529,
+    "customers": 448845,
+    "aov": 29.8,
+    "avg_cust_spend": 30.3,
+    "orders_per_cust": 1.0149,
+    "sl_spend": 209933,
+    "promo_spend": 313688,
+    "total_inv": 523621,
+    "total_ir": 3.86,
+    "sl_ir": 1.55,
+    "promo_ir": 2.31,
+    "sales_vs_ly": -4.8,
+    "deliveries_vs_ly": -8.4,
+    "customers_vs_ly": -8.3,
+    "aov_vs_ly": 3.9,
+    "avg_cust_spend_vs_ly": 3.8,
+    "orders_per_cust_vs_ly": -0.1,
+    "sl_spend_vs_ly": 26.8,
+    "promo_spend_vs_ly": 22.1,
+    "total_inv_vs_ly": 24.0,
+    "sl_ir_vs_ly": 0.9,
+    "promo_ir_vs_ly": 0.39,
+    "total_ir_vs_ly": 0.51,
+    "new_cx": 112491,
+    "repeat_cx": 247420,
+    "lapsed_cx": 76161,
+    "total_cx": 436072,
+    "new_cx_vly": -14382.0,
+    "repeat_cx_vly": -14056.0,
+    "lapsed_cx_vly": 941.0,
+    "total_cx_vly": -27497.0,
+    "repeat_cx_vly_pct": -11.3,
+    "lapsed_cx_vly_pct": -5.4,
+    "total_cx_vly_pct": 1.3
+  },
+  {
+    "month": "2025-12",
+    "sales": 14419371,
+    "deliveries": 476217,
+    "customers": 469100,
+    "aov": 30.3,
+    "avg_cust_spend": 30.7,
+    "orders_per_cust": 1.0152,
+    "sl_spend": 272589,
+    "promo_spend": 466988,
+    "total_inv": 739578,
+    "total_ir": 5.13,
+    "sl_ir": 1.89,
+    "promo_ir": 3.24,
+    "sales_vs_ly": -2.6,
+    "deliveries_vs_ly": -6.5,
+    "customers_vs_ly": -6.4,
+    "aov_vs_ly": 4.2,
+    "avg_cust_spend_vs_ly": 4.1,
+    "orders_per_cust_vs_ly": -0.1,
+    "sl_spend_vs_ly": 70.6,
+    "promo_spend_vs_ly": 71.3,
+    "total_inv_vs_ly": 71.0,
+    "sl_ir_vs_ly": 2.21,
+    "promo_ir_vs_ly": 0.81,
+    "total_ir_vs_ly": 1.4,
+    "new_cx": 120556,
+    "repeat_cx": 259377,
+    "lapsed_cx": 84778,
+    "total_cx": 464711,
+    "new_cx_vly": -11849.0,
+    "repeat_cx_vly": -8768.0,
+    "lapsed_cx_vly": 7210.0,
+    "total_cx_vly": -13407.0,
+    "repeat_cx_vly_pct": -8.9,
+    "lapsed_cx_vly_pct": -3.3,
+    "total_cx_vly_pct": 9.3
+  },
+  {
+    "month": "2026-01",
+    "sales": 13138747,
+    "deliveries": 442004,
+    "customers": 435587,
+    "aov": 29.7,
+    "avg_cust_spend": 30.2,
+    "orders_per_cust": 1.0147,
+    "sl_spend": 226128,
+    "promo_spend": 425013,
+    "total_inv": 651142,
+    "total_ir": 4.96,
+    "sl_ir": 1.72,
+    "promo_ir": 3.23,
+    "sales_vs_ly": -0.3,
+    "deliveries_vs_ly": -3.9,
+    "customers_vs_ly": -3.9,
+    "aov_vs_ly": 3.8,
+    "avg_cust_spend_vs_ly": 3.8,
+    "orders_per_cust_vs_ly": 0.0,
+    "sl_spend_vs_ly": 115.1,
+    "promo_spend_vs_ly": 19.3,
+    "total_inv_vs_ly": 41.1,
+    "sl_ir_vs_ly": 1.46,
+    "promo_ir_vs_ly": 0.92,
+    "total_ir_vs_ly": 0.53,
+    "new_cx": 103901,
+    "repeat_cx": 243201,
+    "lapsed_cx": 72967,
+    "total_cx": 420069,
+    "new_cx_vly": -10606.0,
+    "repeat_cx_vly": -1199.0,
+    "lapsed_cx_vly": 7200.0,
+    "total_cx_vly": -4605.0,
+    "repeat_cx_vly_pct": -9.3,
+    "lapsed_cx_vly_pct": -0.5,
+    "total_cx_vly_pct": 10.9
+  },
+  {
+    "month": "2026-02",
+    "sales": 12726289,
+    "deliveries": 422781,
+    "customers": 416686,
+    "aov": 30.1,
+    "avg_cust_spend": 30.5,
+    "orders_per_cust": 1.0146,
+    "sl_spend": 205552,
+    "promo_spend": 411780,
+    "total_inv": 617332,
+    "total_ir": 4.85,
+    "sl_ir": 1.62,
+    "promo_ir": 3.24,
+    "sales_vs_ly": -0.5,
+    "deliveries_vs_ly": -4.5,
+    "customers_vs_ly": -4.3,
+    "aov_vs_ly": 4.1,
+    "avg_cust_spend_vs_ly": 3.9,
+    "orders_per_cust_vs_ly": -0.2,
+    "sl_spend_vs_ly": 80.6,
+    "promo_spend_vs_ly": 26.5,
+    "total_inv_vs_ly": 40.5,
+    "sl_ir_vs_ly": 1.42,
+    "promo_ir_vs_ly": 0.73,
+    "total_ir_vs_ly": 0.7,
+    "new_cx": 95861,
+    "repeat_cx": 237823,
+    "lapsed_cx": 71106,
+    "total_cx": 404790,
+    "new_cx_vly": -12726.0,
+    "repeat_cx_vly": -1887.0,
+    "lapsed_cx_vly": 7242.0,
+    "total_cx_vly": -7371.0,
+    "repeat_cx_vly_pct": -11.7,
+    "lapsed_cx_vly_pct": -0.8,
+    "total_cx_vly_pct": 11.3
+  },
+  {
+    "month": "2026-03",
+    "sales": 16339844,
+    "deliveries": 541618,
+    "customers": 533493,
+    "aov": 30.2,
+    "avg_cust_spend": 30.6,
+    "orders_per_cust": 1.0152,
+    "sl_spend": 573819,
+    "promo_spend": 822722,
+    "total_inv": 1396541,
+    "total_ir": 8.55,
+    "sl_ir": 3.51,
+    "promo_ir": 5.04,
+    "sales_vs_ly": 7.1,
+    "deliveries_vs_ly": 3.2,
+    "customers_vs_ly": 3.2,
+    "aov_vs_ly": 3.8,
+    "avg_cust_spend_vs_ly": 3.8,
+    "orders_per_cust_vs_ly": -0.1,
+    "sl_spend_vs_ly": 483.2,
+    "promo_spend_vs_ly": 90.6,
+    "total_inv_vs_ly": 163.5,
+    "sl_ir_vs_ly": 5.08,
+    "promo_ir_vs_ly": 2.86,
+    "total_ir_vs_ly": 2.21,
+    "new_cx": 128644,
+    "repeat_cx": 292071,
+    "lapsed_cx": 91162,
+    "total_cx": 511877,
+    "new_cx_vly": -1251.0,
+    "repeat_cx_vly": 16906.0,
+    "lapsed_cx_vly": 16786.0,
+    "total_cx_vly": 32441.0,
+    "repeat_cx_vly_pct": -1.0,
+    "lapsed_cx_vly_pct": 6.1,
+    "total_cx_vly_pct": 22.6
+  },
+  {
+    "month": "2026-04",
+    "sales": 14369360,
+    "deliveries": 478312,
+    "customers": 471537,
+    "aov": 30,
+    "avg_cust_spend": 30.5,
+    "orders_per_cust": 1.0144,
+    "sl_spend": 487105,
+    "promo_spend": 654739,
+    "total_inv": 1141843,
+    "total_ir": 7.95,
+    "sl_ir": 3.39,
+    "promo_ir": 4.56,
+    "sales_vs_ly": 10.4,
+    "deliveries_vs_ly": 4.3,
+    "customers_vs_ly": 4.4,
+    "aov_vs_ly": 5.9,
+    "avg_cust_spend_vs_ly": 5.7,
+    "orders_per_cust_vs_ly": -0.1,
+    "sl_spend_vs_ly": 440.5,
+    "promo_spend_vs_ly": 123.7,
+    "total_inv_vs_ly": 198.2,
+    "sl_ir_vs_ly": 5.01,
+    "promo_ir_vs_ly": 2.7,
+    "total_ir_vs_ly": 2.31,
+    "new_cx": 107660,
+    "repeat_cx": 263844,
+    "lapsed_cx": 76875,
+    "total_cx": 448379,
+    "new_cx_vly": -1940.0,
+    "repeat_cx_vly": 18631.0,
+    "lapsed_cx_vly": 15264.0,
+    "total_cx_vly": 31955.0,
+    "repeat_cx_vly_pct": -1.8,
+    "lapsed_cx_vly_pct": 7.6,
+    "total_cx_vly_pct": 24.8
+  },
+  {
+    "month": "2026-05",
+    "sales": 14530619,
+    "deliveries": 482393,
+    "customers": 438491,
+    "aov": 30.1,
+    "avg_cust_spend": 30.5,
+    "orders_per_cust": 1.0147,
+    "sl_spend": 443685,
+    "promo_spend": 518859,
+    "total_inv": 962544,
+    "total_ir": 6.62,
+    "sl_ir": 3.05,
+    "promo_ir": 3.57,
+    "sales_vs_ly": 12.1,
+    "deliveries_vs_ly": 7.48,
+    "customers_vs_ly": -0.81,
+    "aov_vs_ly": 3.95,
+    "avg_cust_spend_vs_ly": 3.89,
+    "orders_per_cust_vs_ly": -0.05,
+    "sl_spend_vs_ly": 322.15,
+    "promo_spend_vs_ly": 94.09,
+    "total_inv_vs_ly": 158.93,
+    "sl_ir_vs_ly": 3.98,
+    "promo_ir_vs_ly": 2.32,
+    "total_ir_vs_ly": 1.66,
+    "new_cx": 108657,
+    "repeat_cx": 263773,
+    "lapsed_cx": 75581,
+    "total_cx": 448011,
+    "new_cx_vly": 855.0,
+    "repeat_cx_vly": 22404.0,
+    "lapsed_cx_vly": 12726.0,
+    "total_cx_vly": 35985.0,
+    "repeat_cx_vly_pct": 0.8,
+    "lapsed_cx_vly_pct": 9.3,
+    "total_cx_vly_pct": 20.2
+  }
+];
 
 // ─── Date range presets ────────────────────────────────────────────────────
 const RANGES = {
@@ -523,14 +1617,14 @@ function monthLabel(m) {
   return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo-1] + " '" + y.slice(2);
 }
 
-Chart.defaults.color = '#8892b0';
-Chart.defaults.borderColor = '#2e3450';
+Chart.defaults.color = '#6b7280';
+Chart.defaults.borderColor = 'rgba(0,0,0,0.06)';
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 Chart.defaults.font.size = 11;
 
 const gridOpts = {
-  grid: { color: 'rgba(46,52,80,0.7)', drawBorder: false },
-  ticks: { color: '#6b7280', maxTicksLimit: 8 },
+  grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+  ticks: { color: '#8892b0', maxTicksLimit: 8 },
   border: { display: false }
 };
 
@@ -539,22 +1633,149 @@ const gridOpts = {
 const withComps = (d, field) => d.filter(r => r[field] !== null);
 
 // ─── KPI Cards (always latest month, static) ──────────────────────────────
-const latest = ALL_DATA[ALL_DATA.length - 1];
-const kpis = [
-  { label: 'MP Sales',       value: fmt.dollars(latest.sales),          sub: fmt.pct(latest.sales_vs_ly) + ' vs LY',          accent: '#FF3008' },
-  { label: 'Deliveries',     value: fmt.num(latest.deliveries),          sub: fmt.pct(latest.deliveries_vs_ly) + ' vs LY',     accent: '#00B1FE' },
-  { label: 'Customers',      value: fmt.num(latest.customers),           sub: fmt.pct(latest.customers_vs_ly) + ' vs LY',      accent: '#722BD6' },
-  { label: 'AOV',            value: '$' + latest.aov?.toFixed(2),        sub: fmt.pct(latest.aov_vs_ly) + ' vs LY',            accent: '#F2D531' },
-  { label: 'Avg Cust Spend', value: '$' + latest.avg_cust_spend?.toFixed(2), sub: fmt.pct(latest.avg_cust_spend_vs_ly) + ' vs LY', accent: '#A9005D' },
-  { label: 'Total IR',       value: latest.total_ir + '%',               sub: fmt.pp(latest.total_ir_vs_ly) + ' vs LY',        accent: '#570000' },
-  { label: 'Total Inv Spend',value: fmt.dollars(latest.total_inv_spend), sub: fmt.pct(latest.total_inv_vs_ly) + ' vs LY',      accent: '#FFB0AB' },
-];
-const grid = document.getElementById('kpi-grid');
-kpis.forEach(k => {
-  const val = parseFloat(k.sub);
-  const cls = k.sub.includes('N/A') ? 'na' : val > 0 ? 'pos' : val < 0 ? 'neg' : 'na';
-  grid.innerHTML += `<div class="kpi-card" style="--accent:${k.accent}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="sub ${cls}">${k.sub}</div></div>`;
-});
+// ─── Dynamic KPI Snapshot ─────────────────────────────────────────────────
+function fmtMonthFull(m) {
+  const [y, mo] = m.split('-');
+  const names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return names[+mo-1] + ' ' + y;
+}
+
+function getSnapshotData(rangeKey, filteredData) {
+  const latest = ALL_DATA[ALL_DATA.length - 1];
+
+  if (rangeKey === 'all') {
+    return {
+      title: `Latest Month Snapshot — ${fmtMonthFull(latest.month)}`,
+      isLatest: true,
+      sales:    { value: latest.sales,             yoy: latest.sales_vs_ly,          label: 'MP Sales',            accent: '#FDB300' },
+      delivs:   { value: latest.deliveries,         yoy: latest.deliveries_vs_ly,     label: 'Deliveries',          accent: '#00B1FE' },
+      cx:       { value: latest.customers,           yoy: latest.customers_vs_ly,      label: 'Customers',           accent: '#722BD6' },
+      aov:      { value: latest.aov,                 yoy: latest.aov_vs_ly,            label: 'AOV',                 accent: '#F2D531', isDollar: true },
+      acs:      { value: latest.avg_cust_spend,      yoy: latest.avg_cust_spend_vs_ly, label: 'Avg Cust Spend',      accent: '#A9005D', isDollar: true },
+      ir:       { value: latest.total_ir,            yoy: latest.total_ir_vs_ly,       label: 'Total IR',            accent: '#9e7500', isPp: true },
+      inv:      { value: latest.total_inv,            yoy: latest.total_inv_vs_ly,      label: 'Total Inv Spend',     accent: '#FFB0AB' },
+      newCx:    (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        return { value: latest.new_cx, yoy: (prior && prior.new_cx) ? (latest.new_cx/prior.new_cx-1)*100 : null, label: 'New Customers', accent: '#4cbb88' };
+      })(),
+      repeatCx: (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        return { value: latest.repeat_cx, yoy: (prior && prior.repeat_cx) ? (latest.repeat_cx/prior.repeat_cx-1)*100 : null, label: 'Repeat Customers', accent: '#00B1FE' };
+      })(),
+      lapsedCx: (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        return { value: latest.lapsed_cx, yoy: (prior && prior.lapsed_cx) ? (latest.lapsed_cx/prior.lapsed_cx-1)*100 : null, label: 'Lapsed (Returning)', accent: '#F2D531' };
+      })(),
+    };
+  }
+
+  // Period aggregate
+  const n = filteredData.length;
+  const totSales = filteredData.reduce((s, r) => s + r.sales, 0);
+  const totDel   = filteredData.reduce((s, r) => s + r.deliveries, 0);
+  const totCx    = filteredData.reduce((s, r) => s + r.customers, 0);
+  const totInv      = filteredData.reduce((s, r) => s + r.total_inv, 0);
+  const totNewCx    = filteredData.reduce((s, r) => s + (r.new_cx    || 0), 0);
+  const totRepeatCx = filteredData.reduce((s, r) => s + (r.repeat_cx || 0), 0);
+  const totLapsedCx = filteredData.reduce((s, r) => s + (r.lapsed_cx || 0), 0);
+  const aov      = totSales / totDel;
+  const acs      = totSales / totCx;
+  const ir       = (totInv / totSales) * 100;
+
+  // Prior year same months
+  const prior = filteredData.map(r => {
+    const [y, mo] = r.month.split('-');
+    return ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+  }).filter(Boolean);
+
+  let yoySales=null, yoyDel=null, yoyCx=null, yoyAov=null, yoyAcs=null, yoyIr=null, yoyInv=null;
+  let yoyNewCx=null, yoyRepeatCx=null, yoyLapsedCx=null;
+  if (prior.length >= Math.floor(n * 0.7)) {
+    const pSales = prior.reduce((s, r) => s + r.sales, 0);
+    const pDel   = prior.reduce((s, r) => s + r.deliveries, 0);
+    const pCx    = prior.reduce((s, r) => s + r.customers, 0);
+    const pInv   = prior.reduce((s, r) => s + r.total_inv, 0);
+    const pAov   = pSales / pDel;
+    const pAcs   = pSales / pCx;
+    const pIr    = (pInv / pSales) * 100;
+    yoySales = (totSales / pSales - 1) * 100;
+    yoyDel   = (totDel   / pDel   - 1) * 100;
+    yoyCx    = (totCx    / pCx    - 1) * 100;
+    yoyAov   = (aov      / pAov   - 1) * 100;
+    yoyAcs   = (acs      / pAcs   - 1) * 100;
+    yoyIr    = ir - pIr;
+    yoyInv      = (totInv      / pInv   - 1) * 100;
+    const pNewCx    = prior.reduce((s, r) => s + (r.new_cx    || 0), 0);
+    const pRepeatCx = prior.reduce((s, r) => s + (r.repeat_cx || 0), 0);
+    const pLapsedCx = prior.reduce((s, r) => s + (r.lapsed_cx || 0), 0);
+    yoyNewCx    = pNewCx    > 0 ? (totNewCx    / pNewCx    - 1) * 100 : null;
+    yoyRepeatCx = pRepeatCx > 0 ? (totRepeatCx / pRepeatCx - 1) * 100 : null;
+    yoyLapsedCx = pLapsedCx > 0 ? (totLapsedCx / pLapsedCx - 1) * 100 : null;
+  }
+
+  const s0 = fmtMonthFull(filteredData[0].month);
+  const s1 = fmtMonthFull(filteredData[n-1].month);
+  const titles = {
+    comps:  `Period Snapshot — ${s0}–${s1}`,
+    '2026': `2026 YTD — ${s0}–${s1}`,
+    last12: `Last 12 Months — ${s0}–${s1}`,
+    last6:  `Last 6 Months — ${s0}–${s1}`,
+  };
+
+  return {
+    title: titles[rangeKey] || `Snapshot — ${s0}–${s1}`,
+    isLatest: false,
+    sales: { value: totSales, yoy: yoySales, label: 'Total Sales',      accent: '#FDB300' },
+    delivs:{ value: totDel,   yoy: yoyDel,   label: 'Total Deliveries', accent: '#00B1FE' },
+    cx:    { value: totCx,    yoy: yoyCx,    label: 'Customers',   accent: '#722BD6' },
+    aov:   { value: aov,      yoy: yoyAov,   label: 'Avg AOV',          accent: '#F2D531', isDollar: true },
+    acs:   { value: acs,      yoy: yoyAcs,   label: 'Avg Cust Spend',   accent: '#A9005D', isDollar: true },
+    ir:    { value: ir,       yoy: yoyIr,    label: 'Period Total IR',  accent: '#9e7500', isPp: true },
+    inv:      { value: totInv,      yoy: yoyInv,      label: 'Total Inv Spend',    accent: '#FFB0AB' },
+    newCx:    { value: totNewCx,   yoy: yoyNewCx,   label: 'New Customers',      accent: '#4cbb88' },
+    repeatCx: { value: totRepeatCx,yoy: yoyRepeatCx, label: 'Repeat Customers',  accent: '#00B1FE' },
+    lapsedCx: { value: totLapsedCx,yoy: yoyLapsedCx, label: 'Lapsed (Returning)',accent: '#F2D531' },
+  };
+}
+
+function renderKpis(rangeKey, filteredData) {
+  const snap = getSnapshotData(rangeKey, filteredData);
+  document.getElementById('snapshot-title').textContent = snap.title;
+
+  const rows = [snap.sales, snap.delivs, snap.cx, snap.newCx, snap.repeatCx, snap.lapsedCx, snap.aov, snap.acs, snap.ir, snap.inv];
+  const grid = document.getElementById('kpi-grid');
+  grid.innerHTML = '';
+
+  rows.forEach(k => {
+    let valStr, subStr;
+    if (k.isDollar) {
+      valStr = '$' + (k.value != null ? k.value.toFixed(2) : '–');
+    } else if (k.isPp) {
+      valStr = (k.value != null ? k.value.toFixed(2) : '–') + '%';
+    } else if (k.value >= 1e6) {
+      valStr = '$' + (k.value / 1e6).toFixed(1) + 'M';
+    } else if (k.label.includes('Cx') || k.label.includes('Customers') || k.label.includes('Deliveries')) {
+      valStr = k.value != null ? k.value.toLocaleString('en-US', {maximumFractionDigits: 0}) : '–';
+    } else {
+      valStr = k.value != null ? '$' + (k.value / 1e6).toFixed(2) + 'M' : '–';
+    }
+
+    if (k.isPp) {
+      subStr = k.yoy != null ? (k.yoy > 0 ? '+' : '') + k.yoy.toFixed(2) + 'pp vs prior yr' : 'N/A';
+    } else {
+      subStr = k.yoy != null ? (k.yoy > 0 ? '+' : '') + k.yoy.toFixed(1) + '% vs prior yr' : 'N/A';
+    }
+
+    const cls = subStr === 'N/A' ? 'na' : parseFloat(subStr) > 0 ? 'pos' : parseFloat(subStr) < 0 ? 'neg' : 'na';
+    grid.innerHTML += `<div class="kpi-card" style="--accent:${k.accent}"><div class="label">${k.label}</div><div class="value">${valStr}</div><div class="sub ${cls}">${subStr}</div></div>`;
+  });
+}
+
+// Initial render
+renderKpis('all', ALL_DATA);
 
 // ─── Chart registry ───────────────────────────────────────────────────────
 const CHARTS = {};
@@ -570,7 +1791,7 @@ function buildSalesChart(d) {
         {
           label: 'MP Sales',
           data: d.map(r => r.sales),
-          backgroundColor: d.map(r => r.month.startsWith('2026') ? '#E30513' : r.month.startsWith('2025') ? 'rgba(227,5,19,0.55)' : 'rgba(227,5,19,0.28)'),
+          backgroundColor: d.map(r => r.month.startsWith('2026') ? '#FDB300' : r.month.startsWith('2025') ? 'rgba(253,179,0,0.55)' : 'rgba(253,179,0,0.28)'),
           borderRadius: 3, order: 2,
         },
         {
@@ -618,8 +1839,8 @@ function buildGrowthChart(d, field, label, barColor) {
       },
       scales: {
         x: { ...gridOpts, ticks: { ...gridOpts.ticks, maxRotation: 45 } },
-        y: { ...gridOpts, title: { display: true, text: '% Change vs LY', color: '#6b7280', font:{size:10} }, ticks: { ...gridOpts.ticks, callback: v => v+'%' } },
-        y2: { display: false, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#6b7280', callback: v => v+'%' } }
+        y: { ...gridOpts, title: { display: true, text: '% Change vs LY', color: '#8892b0', font:{size:10} }, ticks: { ...gridOpts.ticks, callback: v => v+'%' } },
+        y2: { display: false, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#8892b0', callback: v => v+'%' } }
       }
     }
   };
@@ -700,6 +1921,53 @@ function initCharts(d) {
       plugins:{ legend:{position:'bottom',labels:{boxWidth:10,padding:14}}, tooltip:{callbacks:{label:ctx=>ctx.raw===null?' N/A':' '+ctx.dataset.label+': '+(ctx.raw>0?'+':'')+ctx.raw.toFixed(1)+'%'}} },
       scales:{ x:{...gridOpts,ticks:{...gridOpts.ticks,maxRotation:45}}, y:{...gridOpts,ticks:{...gridOpts.ticks,callback:v=>v+'%'}} } }
   }); }
+
+
+  // Customer breakdown charts
+  if (CHARTS.cxStacked) CHARTS.cxStacked.destroy();
+  CHARTS.cxStacked = new Chart(document.getElementById('cxStackedChart'), {
+    type: 'bar',
+    data: { labels: d.map(r => monthLabel(r.month)), datasets: [
+      { label: 'New',    data: d.map(r => r.new_cx    || 0), backgroundColor: 'rgba(76,187,136,0.8)',  stack: 'cx', borderRadius: 2 },
+      { label: 'Lapsed', data: d.map(r => r.lapsed_cx || 0), backgroundColor: 'rgba(242,213,49,0.8)',  stack: 'cx', borderRadius: 2 },
+      { label: 'Repeat', data: d.map(r => r.repeat_cx || 0), backgroundColor: 'rgba(0,177,254,0.8)',   stack: 'cx', borderRadius: 2 },
+    ]},
+    options: { responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('en-US',{maximumFractionDigits:0})}`}}},
+      scales:{ x:{...gridOpts,stacked:true,ticks:{...gridOpts.ticks,maxRotation:45}},
+               y:{...gridOpts,stacked:true,ticks:{...gridOpts.ticks,callback:v=>(v/1e3).toFixed(0)+'K'}} } }
+  });
+
+  if (CHARTS.cxNewLapsed) CHARTS.cxNewLapsed.destroy();
+  CHARTS.cxNewLapsed = new Chart(document.getElementById('cxNewLapsedChart'), {
+    type:'line',
+    data:{ labels:d.map(r=>monthLabel(r.month)), datasets:[
+      {label:'New Cx',    data:d.map(r=>r.new_cx    ||0), borderColor:'#4cbb88', borderWidth:2, pointRadius:3, tension:0.3},
+      {label:'Lapsed Cx', data:d.map(r=>r.lapsed_cx ||0), borderColor:'#F2D531', borderWidth:2, pointRadius:3, tension:0.3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('en-US',{maximumFractionDigits:0})}`}}},
+      scales:{x:{...gridOpts,ticks:{...gridOpts.ticks,maxRotation:45}},
+              y:{...gridOpts,ticks:{...gridOpts.ticks,callback:v=>(v/1e3).toFixed(0)+'K'}}} }
+  });
+
+  if (CHARTS.cxRepeat) CHARTS.cxRepeat.destroy();
+  CHARTS.cxRepeat = new Chart(document.getElementById('cxRepeatChart'), {
+    type:'bar',
+    data:{ labels:d.map(r=>monthLabel(r.month)), datasets:[{
+      label:'Repeat Cx',
+      data:d.map(r=>r.repeat_cx||0),
+      backgroundColor:d.map(r=>r.month.startsWith('2026')?'rgba(0,177,254,0.9)':r.month.startsWith('2025')?'rgba(0,177,254,0.55)':'rgba(0,177,254,0.3)'),
+      borderRadius:3,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>` Repeat Cx: ${ctx.raw.toLocaleString('en-US',{maximumFractionDigits:0})}`}}},
+      scales:{x:{...gridOpts,ticks:{...gridOpts.ticks,maxRotation:45}},
+              y:{...gridOpts,ticks:{...gridOpts.ticks,callback:v=>(v/1e3).toFixed(0)+'K'}}} }
+  });
 
   // Inv spend stacked
   if (CHARTS.invSpend) CHARTS.invSpend.destroy();
@@ -804,6 +2072,7 @@ function setRange(rangeKey) {
 
   // Rebuild all charts with new data slice
   initCharts(DATA);
+  renderKpis(rangeKey, DATA);
 }
 
 // ─── Investment overlay ───────────────────────────────────────────────────
@@ -842,6 +2111,7 @@ function toggleOverlay(btn, chartKey, field) {
   applyOverlay(chartKey, overlayState[chartKey]);
 }
 
+
 // ─── Seasonality charts ───────────────────────────────────────────────────
 const MONTH_LABELS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -854,9 +2124,9 @@ function getYearSeries(year, field) {
 }
 
 const YR_STYLE = {
-  '2024': { color: 'rgba(255,107,107,0.5)',  dash: [5,4], width: 1.5, pr: 2   },
-  '2025': { color: 'rgba(227,5,19,0.65)',    dash: [3,2], width: 2,   pr: 2.5 },
-  '2026': { color: '#E30513',               dash: [],    width: 2.5, pr: 3   },
+  '2024': { color: 'rgba(253,179,0,0.45)', dash: [5,4], width: 1.5, pr: 2 },
+  '2025': { color: 'rgba(253,179,0,0.72)', dash: [3,2], width: 2,   pr: 2.5 },
+  '2026': { color: '#FDB300',             dash: [],    width: 2.5, pr: 3 },
 };
 
 function buildSeasonChart(id, field, yFmt) {
@@ -883,14 +2153,8 @@ function buildSeasonChart(id, field, yFmt) {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, color: '#6b7280' } },
-        tooltip: {
-          callbacks: {
-            label: ctx => ctx.raw == null
-              ? ` ${ctx.dataset.label}: –`
-              : ` ${ctx.dataset.label}: ${yFmt(ctx.raw)}`
-          }
-        }
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, color: '#8892b0' } },
+        tooltip: { callbacks: { label: ctx => ctx.raw == null ? ` ${ctx.dataset.label}: –` : ` ${ctx.dataset.label}: ${yFmt(ctx.raw)}` } }
       },
       scales: {
         x: { ...gridOpts },
@@ -902,23 +2166,23 @@ function buildSeasonChart(id, field, yFmt) {
 
 const SCHARTS = {};
 function initSeasonCharts() {
-  if (SCHARTS.sales) return; // already built
+  if (SCHARTS.sales) return;
   const K = v => '$' + (v / 1e3).toFixed(0) + 'K';
   const M = v => '$' + (v / 1e6).toFixed(2) + 'M';
-  SCHARTS.sales    = buildSeasonChart('sSalesChart',    'sales',          M);
-  SCHARTS.delivs   = buildSeasonChart('sDelivsChart',   'deliveries',     v => (v/1e3).toFixed(0)+'K');
-  SCHARTS.custs    = buildSeasonChart('sCustsChart',    'customers',      v => (v/1e3).toFixed(0)+'K');
-  SCHARTS.newCx    = buildSeasonChart('sNewCxChart',    'new_cx',         v => (v/1e3).toFixed(0)+'K');
-  SCHARTS.repeatCx = buildSeasonChart('sRepeatCxChart', 'repeat_cx',      v => (v/1e3).toFixed(0)+'K');
-  SCHARTS.lapsedCx = buildSeasonChart('sLapsedCxChart', 'lapsed_cx',      v => (v/1e3).toFixed(0)+'K');
-  SCHARTS.aov      = buildSeasonChart('sAovChart',      'aov',            v => '$'+v.toFixed(2));
-  SCHARTS.acs      = buildSeasonChart('sAcsChart',      'avg_cust_spend', v => '$'+v.toFixed(2));
-  SCHARTS.sl       = buildSeasonChart('sSlChart',       'sl_spend',       K);
-  SCHARTS.promo    = buildSeasonChart('sPromoChart',    'promo_spend',    K);
-  SCHARTS.totalInv = buildSeasonChart('sTotalInvChart', 'total_inv',      K);
-  SCHARTS.totalIr  = buildSeasonChart('sTotalIrChart',  'total_ir',       v => v.toFixed(1)+'%');
-  SCHARTS.slIr     = buildSeasonChart('sSlIrChart',     'sl_ir',          v => v.toFixed(2)+'%');
-  SCHARTS.promoIr  = buildSeasonChart('sPromoIrChart',  'promo_ir',       v => v.toFixed(2)+'%');
+  SCHARTS.sales     = buildSeasonChart('sSalesChart',    'sales',          M);
+  SCHARTS.delivs    = buildSeasonChart('sDelivsChart',   'deliveries',     v => (v/1e3).toFixed(0)+'K');
+  SCHARTS.custs     = buildSeasonChart('sCustsChart',    'customers',      v => (v/1e3).toFixed(0)+'K');
+  SCHARTS.newCx     = buildSeasonChart('sNewCxChart',    'new_cx',         v => (v/1e3).toFixed(0)+'K');
+  SCHARTS.repeatCx  = buildSeasonChart('sRepeatCxChart', 'repeat_cx',      v => (v/1e3).toFixed(0)+'K');
+  SCHARTS.lapsedCx  = buildSeasonChart('sLapsedCxChart', 'lapsed_cx',      v => (v/1e3).toFixed(0)+'K');
+  SCHARTS.aov       = buildSeasonChart('sAovChart',      'aov',            v => '$'+v.toFixed(2));
+  SCHARTS.acs       = buildSeasonChart('sAcsChart',      'avg_cust_spend', v => '$'+v.toFixed(2));
+  SCHARTS.sl        = buildSeasonChart('sSlChart',       'sl_spend',       K);
+  SCHARTS.promo     = buildSeasonChart('sPromoChart',    'promo_spend',    K);
+  SCHARTS.totalInv  = buildSeasonChart('sTotalInvChart', 'total_inv',      K);
+  SCHARTS.totalIr   = buildSeasonChart('sTotalIrChart',  'total_ir',       v => v.toFixed(1)+'%');
+  SCHARTS.slIr      = buildSeasonChart('sSlIrChart',     'sl_ir',          v => v.toFixed(2)+'%');
+  SCHARTS.promoIr   = buildSeasonChart('sPromoIrChart',  'promo_ir',       v => v.toFixed(2)+'%');
 }
 
 // ─── Tab switching ────────────────────────────────────────────────────────
