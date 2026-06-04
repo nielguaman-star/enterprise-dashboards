@@ -10,8 +10,8 @@
     --red: #E30513; --motor-oil: #1C1C1C; --bouquet: #FFF8E1;
     --yolk: #FFD700; --detergent: #00B1FE; --navy: #173162;
     --det900: #005EA4; --purple: #722BD6; --coral: #FFB0AB; --pinot: #A9005D;
-    --bg: #0f1117; --card: #1a1d27; --card2: #22263a;
-    --border: #2e3450; --text: #f0f0f0; --muted: #8892b0;
+    --bg: #f0f2f5; --card: #ffffff; --card2: #f8f9fb;
+    --border: #e2e6ed; --text: #1a1d27; --muted: #6b7280;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
@@ -530,7 +530,7 @@ Chart.defaults.font.size = 11;
 
 const gridOpts = {
   grid: { color: 'rgba(46,52,80,0.7)', drawBorder: false },
-  ticks: { color: '#8892b0', maxTicksLimit: 8 },
+  ticks: { color: '#6b7280', maxTicksLimit: 8 },
   border: { display: false }
 };
 
@@ -618,8 +618,8 @@ function buildGrowthChart(d, field, label, barColor) {
       },
       scales: {
         x: { ...gridOpts, ticks: { ...gridOpts.ticks, maxRotation: 45 } },
-        y: { ...gridOpts, title: { display: true, text: '% Change vs LY', color: '#8892b0', font:{size:10} }, ticks: { ...gridOpts.ticks, callback: v => v+'%' } },
-        y2: { display: false, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#8892b0', callback: v => v+'%' } }
+        y: { ...gridOpts, title: { display: true, text: '% Change vs LY', color: '#6b7280', font:{size:10} }, ticks: { ...gridOpts.ticks, callback: v => v+'%' } },
+        y2: { display: false, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#6b7280', callback: v => v+'%' } }
       }
     }
   };
@@ -883,7 +883,7 @@ function buildSeasonChart(id, field, yFmt) {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, color: '#8892b0' } },
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, color: '#6b7280' } },
         tooltip: {
           callbacks: {
             label: ctx => ctx.raw == null
