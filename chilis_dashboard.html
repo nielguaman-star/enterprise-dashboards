@@ -717,10 +717,10 @@ function renderKpis(rangeKey, filteredData) {
     if (k.isDollar) {
       valStr = '$' + (k.value != null ? k.value.toFixed(2) : '–');
     } else if (k.isFreq) {
-      valStr = k.value != null ? k.value.toFixed(4) : '–';
+      valStr = k.value != null ? k.value.toFixed(2) : '–';
     } else if (k.isPp) {
       valStr = (k.value != null ? k.value.toFixed(2) : '–') + '%';
-    } else if (k.label.includes('Cx') || k.label.includes('Customers') || k.label.includes('Deliveries')) {
+    } else if (k.label.includes('Cx') || k.label.includes('Customers') || k.label.includes('Deliveries') || k.label.includes('Lapsed')) {
       valStr = k.value != null ? k.value.toLocaleString('en-US', {maximumFractionDigits: 0}) : '–';
     } else if (k.value >= 1e6) {
       valStr = '$' + (k.value / 1e6).toFixed(1) + 'M';
@@ -1186,7 +1186,7 @@ function initSeasonCharts() {
   SCHARTS.totalIr   = buildSeasonChart('sTotalIrChart',  'total_ir',       v => v.toFixed(1)+'%');
   SCHARTS.slIr      = buildSeasonChart('sSlIrChart',     'sl_ir',          v => v.toFixed(2)+'%');
   SCHARTS.promoIr   = buildSeasonChart('sPromoIrChart',  'promo_ir',       v => v.toFixed(2)+'%');
-  SCHARTS.opc       = buildSeasonChart('sOpcChart',       'orders_per_cust', v => v.toFixed(4));
+  SCHARTS.opc       = buildSeasonChart('sOpcChart',       'orders_per_cust', v => v.toFixed(2));
 }
 
 // ─── Tab switching ────────────────────────────────────────────────────────
