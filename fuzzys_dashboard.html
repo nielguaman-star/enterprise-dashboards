@@ -208,6 +208,26 @@
 
 
   <div class="section">
+    <h2 class="section-title">Order Frequency</h2>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-header"><div>
+          <div class="chart-title">Orders per Customer — Monthly Trend</div>
+          <div class="chart-subtitle">Average number of orders placed per unique customer</div>
+        </div></div>
+        <div class="chart-wrap"><canvas id="orderFreqAbsChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div>
+          <div class="chart-title">% Order Frequency Change vs LY</div>
+          <div class="chart-subtitle">Year-over-year change in orders per customer</div>
+        </div></div>
+        <div class="chart-wrap"><canvas id="orderFreqGrowthChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2 class="section-title">Customer Breakdown — Monthly Trend</h2>
     <div class="chart-card">
       <div class="chart-header"><div>
@@ -439,6 +459,12 @@
           <div class="chart-subtitle">Total spend per customer year-over-year</div>
         </div></div><div class="chart-wrap"><canvas id="sAcsChart"></canvas></div></div>
       </div>
+      <div class="two-col" style="margin-top:20px">
+        <div class="chart-card"><div class="chart-header"><div>
+          <div class="chart-title">Order Frequency (Orders / Customer)</div>
+          <div class="chart-subtitle">Ordering cadence year-over-year — 2024 · 2025 · 2026</div>
+        </div></div><div class="chart-wrap"><canvas id="sOpcChart"></canvas></div></div>
+      </div>
     </div>
 
     <div class="section">
@@ -579,6 +605,12 @@ function getSnapshotData(rangeKey, filteredData) {
       cx:       { value: latest.customers,           yoy: latest.customers_vs_ly,      label: 'Customers',           accent: '#722BD6' },
       aov:      { value: latest.aov,                 yoy: latest.aov_vs_ly,            label: 'AOV',                 accent: '#F2D531', isDollar: true },
       acs:      { value: latest.avg_cust_spend,      yoy: latest.avg_cust_spend_vs_ly, label: 'Avg Cust Spend',      accent: '#A9005D', isDollar: true },
+      opc:      (function() {
+        const [y,mo] = latest.month.split('-');
+        const prior = ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
+        const yoy = (prior && prior.orders_per_cust) ? (latest.orders_per_cust/prior.orders_per_cust-1)*100 : null;
+        return { value: latest.orders_per_cust, yoy, label: 'Order Frequency', accent: '#FF3008', isFreq: true };
+      })(),
       ir:       { value: latest.total_ir,            yoy: latest.total_ir_vs_ly,       label: 'Total IR',            accent: '#9e7500', isPp: true },
       inv:      { value: latest.total_inv,            yoy: latest.total_inv_vs_ly,      label: 'Total Inv Spend',     accent: '#FFB0AB' },
       newCx:    (function() {
@@ -610,6 +642,7 @@ function getSnapshotData(rangeKey, filteredData) {
   const totLapsedCx = filteredData.reduce((s, r) => s + (r.lapsed_cx || 0), 0);
   const aov      = totSales / totDel;
   const acs      = totSales / totCx;
+  const avgOpc   = totDel / totCx;
   const ir       = (totInv / totSales) * 100;
 
   // Prior year same months
@@ -618,7 +651,7 @@ function getSnapshotData(rangeKey, filteredData) {
     return ALL_DATA.find(d => d.month === `${+y-1}-${mo}`);
   }).filter(Boolean);
 
-  let yoySales=null, yoyDel=null, yoyCx=null, yoyAov=null, yoyAcs=null, yoyIr=null, yoyInv=null;
+  let yoySales=null, yoyDel=null, yoyCx=null, yoyAov=null, yoyAcs=null, yoyOpc=null, yoyIr=null, yoyInv=null;
   let yoyNewCx=null, yoyRepeatCx=null, yoyLapsedCx=null;
   if (prior.length >= Math.floor(n * 0.7)) {
     const pSales = prior.reduce((s, r) => s + r.sales, 0);
@@ -633,6 +666,8 @@ function getSnapshotData(rangeKey, filteredData) {
     yoyCx    = (totCx    / pCx    - 1) * 100;
     yoyAov   = (aov      / pAov   - 1) * 100;
     yoyAcs   = (acs      / pAcs   - 1) * 100;
+    const pAvgOpc = pDel / pCx;
+    yoyOpc   = (avgOpc   / pAvgOpc - 1) * 100;
     yoyIr    = ir - pIr;
     yoyInv      = (totInv      / pInv   - 1) * 100;
     const pNewCx    = prior.reduce((s, r) => s + (r.new_cx    || 0), 0);
@@ -660,6 +695,7 @@ function getSnapshotData(rangeKey, filteredData) {
     cx:    { value: totCx,    yoy: yoyCx,    label: 'Customers',   accent: '#722BD6' },
     aov:   { value: aov,      yoy: yoyAov,   label: 'Avg AOV',          accent: '#F2D531', isDollar: true },
     acs:   { value: acs,      yoy: yoyAcs,   label: 'Avg Cust Spend',   accent: '#A9005D', isDollar: true },
+    opc:   { value: avgOpc,   yoy: yoyOpc,   label: 'Order Frequency',  accent: '#FF3008', isFreq: true },
     ir:    { value: ir,       yoy: yoyIr,    label: 'Period Total IR',  accent: '#9e7500', isPp: true },
     inv:      { value: totInv,      yoy: yoyInv,      label: 'Total Inv Spend',    accent: '#FFB0AB' },
     newCx:    { value: totNewCx,   yoy: yoyNewCx,   label: 'New Customers',      accent: '#4cbb88' },
@@ -672,7 +708,7 @@ function renderKpis(rangeKey, filteredData) {
   const snap = getSnapshotData(rangeKey, filteredData);
   document.getElementById('snapshot-title').textContent = snap.title;
 
-  const rows = [snap.sales, snap.delivs, snap.cx, snap.newCx, snap.repeatCx, snap.lapsedCx, snap.aov, snap.acs, snap.ir, snap.inv];
+  const rows = [snap.sales, snap.delivs, snap.cx, snap.newCx, snap.repeatCx, snap.lapsedCx, snap.aov, snap.acs, snap.opc, snap.ir, snap.inv];
   const grid = document.getElementById('kpi-grid');
   grid.innerHTML = '';
 
@@ -680,9 +716,11 @@ function renderKpis(rangeKey, filteredData) {
     let valStr, subStr;
     if (k.isDollar) {
       valStr = '$' + (k.value != null ? k.value.toFixed(2) : '–');
+    } else if (k.isFreq) {
+      valStr = k.value != null ? k.value.toFixed(2) : '–';
     } else if (k.isPp) {
       valStr = (k.value != null ? k.value.toFixed(2) : '–') + '%';
-    } else if (k.label.includes('Cx') || k.label.includes('Customers') || k.label.includes('Deliveries')) {
+    } else if (k.label.includes('Cx') || k.label.includes('Customers') || k.label.includes('Deliveries') || k.label.includes('Lapsed')) {
       valStr = k.value != null ? k.value.toLocaleString('en-US', {maximumFractionDigits: 0}) : '–';
     } else if (k.value >= 1e6) {
       valStr = '$' + (k.value / 1e6).toFixed(1) + 'M';
@@ -1110,6 +1148,7 @@ function initSeasonCharts() {
   SCHARTS.totalIr   = buildSeasonChart('sTotalIrChart',  'total_ir',       v => v.toFixed(1)+'%');
   SCHARTS.slIr      = buildSeasonChart('sSlIrChart',     'sl_ir',          v => v.toFixed(2)+'%');
   SCHARTS.promoIr   = buildSeasonChart('sPromoIrChart',  'promo_ir',       v => v.toFixed(2)+'%');
+  SCHARTS.opc       = buildSeasonChart('sOpcChart',       'orders_per_cust', v => v.toFixed(2));
 }
 
 // ─── Tab switching ────────────────────────────────────────────────────────
